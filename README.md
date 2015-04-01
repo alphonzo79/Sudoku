@@ -1,2 +1,2 @@
 # Sudoku
-This is my attempt at a Sudoku app -- mainly just to tackle the challenge of computing it all
+This is my attempt at a Sudoku app -- mainly just to tackle the challenge of computing it all. This originally started after I took a session at a weekend Code Camp on solving Sudoku with functional programming -- one of those things where it ends up looking all elegant and neat in a single-line recursively-called function. Once I started thinking through the problem on my own, though, I kept falling back into my stateful Java habits. So that's the direction I'm going to go with this. Hopefully it ends up being half-useful and fun to tackle
