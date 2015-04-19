@@ -3,8 +3,14 @@
     <color name="back_color_one">#FFFFDDDD</color>
     <color name="back_color_two">#FFDDFFDD</color>
     <color name="back_color_three">#FFDDDDFF</color>
+    <color name="back_color_four">#FFDDFFFF</color>
+    <color name="back_color_five">#FFFFFFDD</color>
+    <color name="back_color_six">#FFFFDDFF</color>
 
     <color name="tagged_color_one">#FFFF8888</color>
     <color name="tagged_color_two">#FF88FF88</color>
     <color name="tagged_color_three">#FF8888FF</color>
+    <color name="tagged_color_four">#FF88FFFF</color>
+    <color name="tagged_color_five">#FFFFFF88</color>
+    <color name="tagged_color_six">#FFFF88FF</color>
 </resources>
