@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="back_color_one">#FFFFDDDD</color>
+    <color name="back_color_two">#FFDDFFDD</color>
+    <color name="back_color_three">#FFDDDDFF</color>
+
+    <color name="tagged_color_one">#FFFF8888</color>
+    <color name="tagged_color_two">#FF88FF88</color>
+    <color name="tagged_color_three">#FF8888FF</color>
+</resources>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<level-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:minLevel="0">
+        <shape>
+            <stroke
+                android:color="@android:color/black"
+                android:width="1dp" />
+            <solid android:color="@color/back_color_two" />
+        </shape>
+    </item>
+
+    <item android:minLevel="1">
+        <shape>
+            <stroke
+                android:color="@android:color/black"
+                android:width="1dp" />
+            <solid android:color="@color/tagged_color_two" />
+        </shape>
+    </item>
+</level-list>

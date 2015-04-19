@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/chosen_number_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        tools:text="9"
+        android:maxLength="1"
+        android:textSize="48sp"
+        android:textColor="@android:color/black"/>
+
+    <TextView
+        android:if="@+id/noted_guesses_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        tools:text="1 2 3\n4 5 6\n7"
+        android:gravity="center_horizontal"
+        android:textSize="16sp"
+        android:textColor="@android:color/darker_gray" />
+
+</FrameLayout>
