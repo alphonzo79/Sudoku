@@ -46,7 +46,7 @@ public class Cell extends FrameLayout {
         }
 
         for(int i = 0; i < markedGuesses.length; i++) {
-            markedGuesses[i] = true;
+            markedGuesses[i] = false;
         }
 
         chosenNumber = 0;
@@ -59,12 +59,28 @@ public class Cell extends FrameLayout {
         isMarked = false;
     }
 
-    public void setChosenNumber(int chosenNumber) {
+    public void setChosenNumber(int chosenNumber, boolean display) {
         this.chosenNumber = chosenNumber;
         chosenNumDisplay.setText(String.valueOf(chosenNumber));
-        chosenNumDisplay.setVisibility(VISIBLE);
+        if(display) {
+            chosenNumDisplay.setVisibility(VISIBLE);
+        }
 
         guessesDisplay.setVisibility(GONE);
+    }
+
+    public int getChosenNumber() {
+        return chosenNumber;
+    }
+
+    public int removeChosenNumber() {
+        int result = chosenNumber;
+        chosenNumber = 0;
+        chosenNumDisplay.setText("");
+        chosenNumDisplay.setVisibility(GONE);
+        possibilities[result] = true;
+
+        return result;
     }
 
     public void setMarkedGuesses(boolean[] markedGuesses) {
@@ -104,6 +120,20 @@ public class Cell extends FrameLayout {
 
     public boolean getIsMarked() {
         return isMarked;
+    }
+
+    public void addPossibility(int possibility) {
+        possibilities[possibility] = true;
+    }
+
+    public void removePossibility(int possibility) {
+        possibilities[possibility] = false;
+    }
+
+    public void finalizeCell() {
+        if(chosenNumber > 0) {
+            chosenNumDisplay.setVisibility(VISIBLE);
+        }
     }
 
     @Override

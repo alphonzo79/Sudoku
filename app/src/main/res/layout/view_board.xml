@@ -15,6 +15,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="0"
             android:background="@drawable/cell_back_one" />
 
         <rowley.sudoku.view.Cell
@@ -22,6 +23,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="1"
             android:background="@drawable/cell_back_one" />
 
         <rowley.sudoku.view.Cell
@@ -29,6 +31,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="2"
             android:background="@drawable/cell_back_one" />
 
         <View
@@ -41,6 +44,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="3"
             android:background="@drawable/cell_back_two" />
 
         <rowley.sudoku.view.Cell
@@ -48,6 +52,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="4"
             android:background="@drawable/cell_back_two" />
 
         <rowley.sudoku.view.Cell
@@ -55,6 +60,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="5"
             android:background="@drawable/cell_back_two" />
 
         <View
@@ -67,6 +73,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="6"
             android:background="@drawable/cell_back_three" />
 
         <rowley.sudoku.view.Cell
@@ -74,6 +81,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="7"
             android:background="@drawable/cell_back_three" />
 
         <rowley.sudoku.view.Cell
@@ -81,6 +89,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="8"
             android:background="@drawable/cell_back_three" />
 
     </LinearLayout>
@@ -95,6 +104,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="9"
             android:background="@drawable/cell_back_one" />
 
         <rowley.sudoku.view.Cell
@@ -102,6 +112,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="10"
             android:background="@drawable/cell_back_one" />
 
         <rowley.sudoku.view.Cell
@@ -109,6 +120,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="11"
             android:background="@drawable/cell_back_one" />
 
         <View
@@ -121,6 +133,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="12"
             android:background="@drawable/cell_back_two" />
 
         <rowley.sudoku.view.Cell
@@ -128,6 +141,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="13"
             android:background="@drawable/cell_back_two" />
 
         <rowley.sudoku.view.Cell
@@ -135,6 +149,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="14"
             android:background="@drawable/cell_back_two" />
 
         <View
@@ -147,6 +162,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="15"
             android:background="@drawable/cell_back_three" />
 
         <rowley.sudoku.view.Cell
@@ -154,6 +170,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="16"
             android:background="@drawable/cell_back_three" />
 
         <rowley.sudoku.view.Cell
@@ -161,6 +178,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="17"
             android:background="@drawable/cell_back_three" />
 
     </LinearLayout>
@@ -175,6 +193,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="18"
             android:background="@drawable/cell_back_one" />
 
         <rowley.sudoku.view.Cell
@@ -182,6 +201,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="19"
             android:background="@drawable/cell_back_one" />
 
         <rowley.sudoku.view.Cell
@@ -189,6 +209,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="20"
             android:background="@drawable/cell_back_one" />
 
         <View
@@ -201,6 +222,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="21"
             android:background="@drawable/cell_back_two" />
 
         <rowley.sudoku.view.Cell
@@ -208,6 +230,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="22"
             android:background="@drawable/cell_back_two" />
 
         <rowley.sudoku.view.Cell
@@ -215,6 +238,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="23"
             android:background="@drawable/cell_back_two" />
 
         <View
@@ -227,6 +251,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="24"
             android:background="@drawable/cell_back_three" />
 
         <rowley.sudoku.view.Cell
@@ -234,6 +259,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="25"
             android:background="@drawable/cell_back_three" />
 
         <rowley.sudoku.view.Cell
@@ -241,6 +267,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="26"
             android:background="@drawable/cell_back_three" />
 
     </LinearLayout>
@@ -260,6 +287,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="27"
             android:background="@drawable/cell_back_four" />
 
         <rowley.sudoku.view.Cell
@@ -267,6 +295,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="28"
             android:background="@drawable/cell_back_four" />
 
         <rowley.sudoku.view.Cell
@@ -274,6 +303,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="29"
             android:background="@drawable/cell_back_four" />
 
         <View
@@ -286,6 +316,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="30"
             android:background="@drawable/cell_back_five" />
 
         <rowley.sudoku.view.Cell
@@ -293,6 +324,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="31"
             android:background="@drawable/cell_back_five" />
 
         <rowley.sudoku.view.Cell
@@ -300,6 +332,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="32"
             android:background="@drawable/cell_back_five" />
 
         <View
@@ -312,6 +345,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="33"
             android:background="@drawable/cell_back_six" />
 
         <rowley.sudoku.view.Cell
@@ -319,6 +353,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="34"
             android:background="@drawable/cell_back_six" />
 
         <rowley.sudoku.view.Cell
@@ -326,6 +361,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="35"
             android:background="@drawable/cell_back_six" />
 
     </LinearLayout>
@@ -340,6 +376,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="36"
             android:background="@drawable/cell_back_four" />
 
         <rowley.sudoku.view.Cell
@@ -347,6 +384,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="37"
             android:background="@drawable/cell_back_four" />
 
         <rowley.sudoku.view.Cell
@@ -354,6 +392,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="38"
             android:background="@drawable/cell_back_four" />
 
         <View
@@ -366,6 +405,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="39"
             android:background="@drawable/cell_back_five" />
 
         <rowley.sudoku.view.Cell
@@ -373,6 +413,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="40"
             android:background="@drawable/cell_back_five" />
 
         <rowley.sudoku.view.Cell
@@ -380,6 +421,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="41"
             android:background="@drawable/cell_back_five" />
 
         <View
@@ -392,6 +434,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="42"
             android:background="@drawable/cell_back_six" />
 
         <rowley.sudoku.view.Cell
@@ -399,6 +442,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="43"
             android:background="@drawable/cell_back_six" />
 
         <rowley.sudoku.view.Cell
@@ -406,6 +450,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="44"
             android:background="@drawable/cell_back_six" />
 
     </LinearLayout>
@@ -420,6 +465,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="45"
             android:background="@drawable/cell_back_four" />
 
         <rowley.sudoku.view.Cell
@@ -427,6 +473,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="46"
             android:background="@drawable/cell_back_four" />
 
         <rowley.sudoku.view.Cell
@@ -434,6 +481,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="47"
             android:background="@drawable/cell_back_four" />
 
         <View
@@ -446,6 +494,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="48"
             android:background="@drawable/cell_back_five" />
 
         <rowley.sudoku.view.Cell
@@ -453,6 +502,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="49"
             android:background="@drawable/cell_back_five" />
 
         <rowley.sudoku.view.Cell
@@ -460,6 +510,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="50"
             android:background="@drawable/cell_back_five" />
 
         <View
@@ -472,6 +523,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="51"
             android:background="@drawable/cell_back_six" />
 
         <rowley.sudoku.view.Cell
@@ -479,6 +531,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="52"
             android:background="@drawable/cell_back_six" />
 
         <rowley.sudoku.view.Cell
@@ -486,6 +539,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="53"
             android:background="@drawable/cell_back_six" />
 
     </LinearLayout>
@@ -505,6 +559,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="54"
             android:background="@drawable/cell_back_three" />
 
         <rowley.sudoku.view.Cell
@@ -512,6 +567,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="55"
             android:background="@drawable/cell_back_three" />
 
         <rowley.sudoku.view.Cell
@@ -519,6 +575,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="56"
             android:background="@drawable/cell_back_three" />
 
         <View
@@ -531,6 +588,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="57"
             android:background="@drawable/cell_back_one" />
 
         <rowley.sudoku.view.Cell
@@ -538,6 +596,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="58"
             android:background="@drawable/cell_back_one" />
 
         <rowley.sudoku.view.Cell
@@ -545,6 +604,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="59"
             android:background="@drawable/cell_back_one" />
 
         <View
@@ -557,6 +617,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="60"
             android:background="@drawable/cell_back_two" />
 
         <rowley.sudoku.view.Cell
@@ -564,6 +625,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="61"
             android:background="@drawable/cell_back_two" />
 
         <rowley.sudoku.view.Cell
@@ -571,6 +633,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="62"
             android:background="@drawable/cell_back_two" />
 
     </LinearLayout>
@@ -585,6 +648,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="63"
             android:background="@drawable/cell_back_three" />
 
         <rowley.sudoku.view.Cell
@@ -592,6 +656,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="64"
             android:background="@drawable/cell_back_three" />
 
         <rowley.sudoku.view.Cell
@@ -599,6 +664,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="65"
             android:background="@drawable/cell_back_three" />
 
         <View
@@ -611,6 +677,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="66"
             android:background="@drawable/cell_back_one" />
 
         <rowley.sudoku.view.Cell
@@ -618,6 +685,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="67"
             android:background="@drawable/cell_back_one" />
 
         <rowley.sudoku.view.Cell
@@ -625,6 +693,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="68"
             android:background="@drawable/cell_back_one" />
 
         <View
@@ -637,6 +706,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="69"
             android:background="@drawable/cell_back_two" />
 
         <rowley.sudoku.view.Cell
@@ -644,6 +714,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="70"
             android:background="@drawable/cell_back_two" />
 
         <rowley.sudoku.view.Cell
@@ -651,6 +722,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="71"
             android:background="@drawable/cell_back_two" />
 
     </LinearLayout>
@@ -665,6 +737,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="72"
             android:background="@drawable/cell_back_three" />
 
         <rowley.sudoku.view.Cell
@@ -672,6 +745,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="73"
             android:background="@drawable/cell_back_three" />
 
         <rowley.sudoku.view.Cell
@@ -679,6 +753,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="74"
             android:background="@drawable/cell_back_three" />
 
         <View
@@ -691,6 +766,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="75"
             android:background="@drawable/cell_back_one" />
 
         <rowley.sudoku.view.Cell
@@ -698,6 +774,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="76"
             android:background="@drawable/cell_back_one" />
 
         <rowley.sudoku.view.Cell
@@ -705,6 +782,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="77"
             android:background="@drawable/cell_back_one" />
 
         <View
@@ -717,6 +795,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="78"
             android:background="@drawable/cell_back_two" />
 
         <rowley.sudoku.view.Cell
@@ -724,6 +803,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="79"
             android:background="@drawable/cell_back_two" />
 
         <rowley.sudoku.view.Cell
@@ -731,6 +811,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:tag="80"
             android:background="@drawable/cell_back_two" />
 
     </LinearLayout>
