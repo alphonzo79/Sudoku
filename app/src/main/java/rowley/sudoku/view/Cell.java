@@ -59,26 +59,30 @@ public class Cell extends FrameLayout {
         isMarked = false;
     }
 
-    public void setChosenNumber(int chosenNumber, boolean display) {
-        this.chosenNumber = chosenNumber;
-        chosenNumDisplay.setText(String.valueOf(chosenNumber));
-        if(display) {
-            chosenNumDisplay.setVisibility(VISIBLE);
+    public void setChosenNumber(int oneBasedChosenNumber, boolean display) {
+        if(oneBasedChosenNumber > 0 && oneBasedChosenNumber <= possibilities.length) {
+            this.chosenNumber = oneBasedChosenNumber;
+            chosenNumDisplay.setText(String.valueOf(chosenNumber));
+            if (display) {
+                chosenNumDisplay.setVisibility(VISIBLE);
+                guessesDisplay.setVisibility(GONE);
+            }
+            possibilities[oneBasedChosenNumber - 1] = false;
         }
-
-        guessesDisplay.setVisibility(GONE);
     }
 
-    public int getChosenNumber() {
+    public int getOneBasedChosenNumber() {
         return chosenNumber;
     }
 
-    public int removeChosenNumber() {
+    public int removeOneBasedChosenNumber() {
         int result = chosenNumber;
         chosenNumber = 0;
         chosenNumDisplay.setText("");
         chosenNumDisplay.setVisibility(GONE);
-        possibilities[result] = true;
+        if(result >= 0) {
+            possibilities[result - 1] = true;
+        }
 
         return result;
     }
@@ -122,12 +126,12 @@ public class Cell extends FrameLayout {
         return isMarked;
     }
 
-    public void addPossibility(int possibility) {
-        possibilities[possibility] = true;
+    public void addPossibility(int zeroBasedPossibility) {
+        possibilities[zeroBasedPossibility] = true;
     }
 
-    public void removePossibility(int possibility) {
-        possibilities[possibility] = false;
+    public void removePossibility(int zeroBasedPossibility) {
+        possibilities[zeroBasedPossibility] = false;
     }
 
     public void finalizeCell() {

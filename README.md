@@ -1,2 +1,6 @@
 # Sudoku
 This is my attempt at a Sudoku app -- mainly just to tackle the challenge of computing it all. This originally started after I took a session at a weekend Code Camp on solving Sudoku with functional programming -- one of those things where it ends up looking all elegant and neat in a single-line recursively-called function. Once I started thinking through the problem on my own, though, I kept falling back into my stateful Java habits. So that's the direction I'm going to go with this. Hopefully it ends up being half-useful and fun to tackle
+
+Driving Motivations
+===================
+* One of my driving motivations in this project is to minimize heap thrash and garbage collection. Mainly this comes about again for the specific challenge. In general I am very generous with the objects that I create, use and allow to die without much thought to garbage collection pauses and heap thrash. In this project I am trying to do most of my instantiation once and reuse resources. At most I want to allocate no more than a boolean and/or int or two to be used inside of each method. The trade off is that I am finding need to incur CPU cycles in other places to accomodate. We'll see how this turns out.
