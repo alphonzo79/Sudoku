@@ -61,6 +61,7 @@ public class Cell extends FrameLayout {
         guessesDisplay.setText("");
         guessesDisplay.setVisibility(GONE);
 
+        getBackground().setLevel(0);
         isMarked = false;
     }
 
