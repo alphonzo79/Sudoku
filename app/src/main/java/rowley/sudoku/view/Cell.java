@@ -23,14 +23,17 @@ public class Cell extends FrameLayout {
 
     public Cell(Context context) {
         super(context);
+        initView(context);
     }
 
     public Cell(Context context, AttributeSet attrs) {
         super(context, attrs);
+        initView(context);
     }
 
     public Cell(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        initView(context);
     }
 
     private void initView(Context context) {
