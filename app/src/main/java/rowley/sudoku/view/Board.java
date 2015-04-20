@@ -1,7 +1,10 @@
 package rowley.sudoku.view;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -39,17 +42,21 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
     private void initView(Context context) {
         inflate(context, R.layout.view_board, this);
 
-        for(int i = 0; i < cells.length; i++) {
-            Cell cell = (Cell)findViewWithTag(i);
-            cell.setOnClickListener(this);
-            cell.setOnLongClickListener(this);
-            cells[i] = cell;
+        if(!isInEditMode()) {
+            for (int i = 0; i < cells.length; i++) {
+                Cell cell = (Cell) findViewWithTag(String.valueOf(i));
+                cell.setOnClickListener(this);
+                cell.setOnLongClickListener(this);
+                cells[i] = cell;
+            }
         }
 
         rand = new Random(System.currentTimeMillis());
     }
 
-    public void initializeBoard(double targetComplexity) {
+    public void initializeBoard(final double targetComplexity) {
+        long startTime = System.currentTimeMillis();
+
         moveIndex = 0;
         for(int i = 0; i < moveRecord.length; i++) {
             moveRecord[i] = -1;
@@ -59,7 +66,9 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
             cell.resetCell();
         }
 
-        findValueForCellAndAllOthers(0);
+        if(!findValueForCellAndAllOthers(0)) {
+            Toast.makeText(getContext(), R.string.failed_to_build_board, Toast.LENGTH_SHORT).show();
+        }
         for(int i = 0; i < cells.length; i++) {
             winningBoard[i] = cells[i].getOneBasedChosenNumber();
         }
@@ -70,6 +79,7 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
             int retrieved = cells[cellIndex].removeOneBasedChosenNumber();
             if(retrieved > 0) {
                 addPossibilityToCounterparts(retrieved - 1, cellIndex);
+                Log.d("JAR", "Found complexity of " + estimateComplexity());
                 shouldContinue = estimateComplexity() < targetComplexity;
             }
         }
@@ -77,6 +87,8 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
         for(Cell cell : cells) {
             cell.finalizeCell();
         }
+
+        Log.d("JAR", "Time to create: " + (System.currentTimeMillis() - startTime));
     }
 
     private boolean findValueForCellAndAllOthers(int targetCell) {
@@ -89,12 +101,13 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
         int possibilitiesSize = cells[targetCell].getPossibilities().length;
         int index = rand.nextInt(possibilitiesSize);
         for(int i = 0; i < possibilitiesSize && !result; i++, index++) {
-            if(index > possibilitiesSize) {
+            if(index >= possibilitiesSize) {
                 index = 0;
             }
 
             if(cells[targetCell].getPossibilities()[index]) {
                 cells[targetCell].setChosenNumber(index + 1, false);
+                Log.d("JAR", "Trying Value " + (index + 1) + " in cell " + targetCell);
                 if(removePossibilityFromCounterparts(index, targetCell)) {
                     result = findValueForCellAndAllOthers(targetCell + 1);
                 }
@@ -114,29 +127,29 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
 
         int rowNum = cellNum / 9;
         int workingIndex = cellNum - 1;
-        while(workingIndex / 9 == rowNum && success) {
+        while(workingIndex >= 0 && workingIndex / 9 == rowNum && success) {
             cells[workingIndex].removePossibility(zeroBasedPossibility);
-            success = doesCellHaveMoreThanZeroPossibilities(cells[workingIndex]);
+            success = doesCellHaveMoreThanZeroPossibilities(cells[workingIndex]) || cells[workingIndex].getOneBasedChosenNumber() > 0;
             workingIndex--;
         }
         workingIndex = cellNum + 1;
-        while(workingIndex / 9 == rowNum && success) {
+        while(workingIndex >= 0 && workingIndex / 9 == rowNum && success) {
             cells[workingIndex].removePossibility(zeroBasedPossibility);
-            success = doesCellHaveMoreThanZeroPossibilities(cells[workingIndex]);
+            success = doesCellHaveMoreThanZeroPossibilities(cells[workingIndex]) || cells[workingIndex].getOneBasedChosenNumber() > 0;
             workingIndex++;
         }
 
         int columnNum = cellNum % 9;
         workingIndex = cellNum - 9;
-        while(workingIndex > 0 && success) {
+        while(workingIndex >= 0 && success) {
             cells[workingIndex].removePossibility(zeroBasedPossibility);
-            success = doesCellHaveMoreThanZeroPossibilities(cells[workingIndex]);
+            success = doesCellHaveMoreThanZeroPossibilities(cells[workingIndex]) || cells[workingIndex].getOneBasedChosenNumber() > 0;
             workingIndex += -9;
         }
         workingIndex = cellNum + 9;
-        while(workingIndex < cells.length && success) {
+        while(workingIndex >= 0 && workingIndex < cells.length && success) {
             cells[workingIndex].removePossibility(zeroBasedPossibility);
-            success = doesCellHaveMoreThanZeroPossibilities(cells[workingIndex]);
+            success = doesCellHaveMoreThanZeroPossibilities(cells[workingIndex]) || cells[workingIndex].getOneBasedChosenNumber() > 0;
             workingIndex += 9;
         }
 
@@ -144,51 +157,51 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
         //Brute-force try two rows above and two rows below
         int blockNum = figureBlockNumForCell(cellNum);
         workingIndex = cellNum - 10;
-        while(figureBlockNumForCell(workingIndex) == blockNum && success) {
+        while(workingIndex >=0 && figureBlockNumForCell(workingIndex) == blockNum && success) {
             cells[workingIndex].removePossibility(zeroBasedPossibility);
-            success = doesCellHaveMoreThanZeroPossibilities(cells[workingIndex]);
+            success = doesCellHaveMoreThanZeroPossibilities(cells[workingIndex]) || cells[workingIndex].getOneBasedChosenNumber() > 0;
             workingIndex--;
         }
         workingIndex = cellNum - 8;
-        while(figureBlockNumForCell(workingIndex) == blockNum && success) {
+        while(workingIndex >=0 && figureBlockNumForCell(workingIndex) == blockNum && success) {
             cells[workingIndex].removePossibility(zeroBasedPossibility);
-            success = doesCellHaveMoreThanZeroPossibilities(cells[workingIndex]);
+            success = doesCellHaveMoreThanZeroPossibilities(cells[workingIndex]) || cells[workingIndex].getOneBasedChosenNumber() > 0;
             workingIndex++;
         }
         workingIndex = cellNum - 19;
-        while(figureBlockNumForCell(workingIndex) == blockNum && success) {
+        while(workingIndex >=0 && figureBlockNumForCell(workingIndex) == blockNum && success) {
             cells[workingIndex].removePossibility(zeroBasedPossibility);
-            success = doesCellHaveMoreThanZeroPossibilities(cells[workingIndex]);
+            success = doesCellHaveMoreThanZeroPossibilities(cells[workingIndex]) || cells[workingIndex].getOneBasedChosenNumber() > 0;
             workingIndex--;
         }
         workingIndex = cellNum - 17;
-        while(figureBlockNumForCell(workingIndex) == blockNum && success) {
+        while(workingIndex >=0 && figureBlockNumForCell(workingIndex) == blockNum && success) {
             cells[workingIndex].removePossibility(zeroBasedPossibility);
-            success = doesCellHaveMoreThanZeroPossibilities(cells[workingIndex]);
+            success = doesCellHaveMoreThanZeroPossibilities(cells[workingIndex]) || cells[workingIndex].getOneBasedChosenNumber() > 0;
             workingIndex++;
         }
         workingIndex = cellNum + 8;
-        while(figureBlockNumForCell(workingIndex) == blockNum && success) {
+        while(workingIndex >=0 && figureBlockNumForCell(workingIndex) == blockNum && success) {
             cells[workingIndex].removePossibility(zeroBasedPossibility);
-            success = doesCellHaveMoreThanZeroPossibilities(cells[workingIndex]);
+            success = doesCellHaveMoreThanZeroPossibilities(cells[workingIndex]) || cells[workingIndex].getOneBasedChosenNumber() > 0;
             workingIndex--;
         }
         workingIndex = cellNum + 10;
-        while(figureBlockNumForCell(workingIndex) == blockNum && success) {
+        while(workingIndex >=0 && figureBlockNumForCell(workingIndex) == blockNum && success) {
             cells[workingIndex].removePossibility(zeroBasedPossibility);
-            success = doesCellHaveMoreThanZeroPossibilities(cells[workingIndex]);
+            success = doesCellHaveMoreThanZeroPossibilities(cells[workingIndex]) || cells[workingIndex].getOneBasedChosenNumber() > 0;
             workingIndex++;
         }
         workingIndex = cellNum + 17;
-        while(figureBlockNumForCell(workingIndex) == blockNum && success) {
+        while(workingIndex >=0 && figureBlockNumForCell(workingIndex) == blockNum && success) {
             cells[workingIndex].removePossibility(zeroBasedPossibility);
-            success = doesCellHaveMoreThanZeroPossibilities(cells[workingIndex]);
+            success = doesCellHaveMoreThanZeroPossibilities(cells[workingIndex]) || cells[workingIndex].getOneBasedChosenNumber() > 0;
             workingIndex--;
         }
         workingIndex = cellNum + 19;
-        while(figureBlockNumForCell(workingIndex) == blockNum && success) {
+        while(workingIndex >=0 && figureBlockNumForCell(workingIndex) == blockNum && success) {
             cells[workingIndex].removePossibility(zeroBasedPossibility);
-            success = doesCellHaveMoreThanZeroPossibilities(cells[workingIndex]);
+            success = doesCellHaveMoreThanZeroPossibilities(cells[workingIndex]) || cells[workingIndex].getOneBasedChosenNumber() > 0;
             workingIndex++;
         }
 
@@ -198,14 +211,14 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
     private void addPossibilityToCounterparts(int zeroBasedPossibility, int cellNum) {
         int rowNum = cellNum / 9;
         int workingIndex = cellNum - 1;
-        while(workingIndex / 9 == rowNum) {
+        while(workingIndex >= 0 && workingIndex / 9 == rowNum) {
             if(!isPossibilitySetAsChosenInCounterpart(zeroBasedPossibility, workingIndex)) {
                 cells[workingIndex].addPossibility(zeroBasedPossibility);
             }
             workingIndex--;
         }
         workingIndex = cellNum + 1;
-        while(workingIndex / 9 == rowNum) {
+        while(workingIndex >= 0 && workingIndex / 9 == rowNum) {
             if(!isPossibilitySetAsChosenInCounterpart(zeroBasedPossibility, workingIndex)) {
                 cells[workingIndex].addPossibility(zeroBasedPossibility);
             }
@@ -214,14 +227,14 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
 
         int columnNum = cellNum % 9;
         workingIndex = cellNum - 9;
-        while(workingIndex > 0) {
+        while(workingIndex >= 0) {
             if(!isPossibilitySetAsChosenInCounterpart(zeroBasedPossibility, workingIndex)) {
                 cells[workingIndex].addPossibility(zeroBasedPossibility);
             }
             workingIndex += -9;
         }
         workingIndex = cellNum + 9;
-        while(workingIndex < cells.length) {
+        while(workingIndex >= 0 && workingIndex < cells.length) {
             if(!isPossibilitySetAsChosenInCounterpart(zeroBasedPossibility, workingIndex)) {
                 cells[workingIndex].addPossibility(zeroBasedPossibility);
             }
@@ -232,56 +245,56 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
         //Brute-force try two rows above and two rows below
         int blockNum = figureBlockNumForCell(cellNum);
         workingIndex = cellNum - 10;
-        while(figureBlockNumForCell(workingIndex) == blockNum) {
+        while(workingIndex >=0 && figureBlockNumForCell(workingIndex) == blockNum) {
             if(!isPossibilitySetAsChosenInCounterpart(zeroBasedPossibility, workingIndex)) {
                 cells[workingIndex].addPossibility(zeroBasedPossibility);
             }
             workingIndex--;
         }
         workingIndex = cellNum - 8;
-        while(figureBlockNumForCell(workingIndex) == blockNum) {
+        while(workingIndex >=0 && figureBlockNumForCell(workingIndex) == blockNum) {
             if(!isPossibilitySetAsChosenInCounterpart(zeroBasedPossibility, workingIndex)) {
                 cells[workingIndex].addPossibility(zeroBasedPossibility);
             }
             workingIndex++;
         }
         workingIndex = cellNum - 19;
-        while(figureBlockNumForCell(workingIndex) == blockNum) {
+        while(workingIndex >=0 && figureBlockNumForCell(workingIndex) == blockNum) {
             if(!isPossibilitySetAsChosenInCounterpart(zeroBasedPossibility, workingIndex)) {
                 cells[workingIndex].addPossibility(zeroBasedPossibility);
             }
             workingIndex--;
         }
         workingIndex = cellNum - 17;
-        while(figureBlockNumForCell(workingIndex) == blockNum) {
+        while(workingIndex >=0 && figureBlockNumForCell(workingIndex) == blockNum) {
             if(!isPossibilitySetAsChosenInCounterpart(zeroBasedPossibility, workingIndex)) {
                 cells[workingIndex].addPossibility(zeroBasedPossibility);
             }
             workingIndex++;
         }
         workingIndex = cellNum + 8;
-        while(figureBlockNumForCell(workingIndex) == blockNum) {
+        while(workingIndex >=0 && figureBlockNumForCell(workingIndex) == blockNum) {
             if(!isPossibilitySetAsChosenInCounterpart(zeroBasedPossibility, workingIndex)) {
                 cells[workingIndex].addPossibility(zeroBasedPossibility);
             }
             workingIndex--;
         }
         workingIndex = cellNum + 10;
-        while(figureBlockNumForCell(workingIndex) == blockNum) {
+        while(workingIndex >=0 && figureBlockNumForCell(workingIndex) == blockNum) {
             if(!isPossibilitySetAsChosenInCounterpart(zeroBasedPossibility, workingIndex)) {
                 cells[workingIndex].addPossibility(zeroBasedPossibility);
             }
             workingIndex++;
         }
         workingIndex = cellNum + 17;
-        while(figureBlockNumForCell(workingIndex) == blockNum) {
+        while(workingIndex >=0 && figureBlockNumForCell(workingIndex) == blockNum) {
             if(!isPossibilitySetAsChosenInCounterpart(zeroBasedPossibility, workingIndex)) {
                 cells[workingIndex].addPossibility(zeroBasedPossibility);
             }
             workingIndex--;
         }
         workingIndex = cellNum + 19;
-        while(figureBlockNumForCell(workingIndex) == blockNum) {
+        while(workingIndex >=0 && figureBlockNumForCell(workingIndex) == blockNum) {
             if(!isPossibilitySetAsChosenInCounterpart(zeroBasedPossibility, workingIndex)) {
                 cells[workingIndex].addPossibility(zeroBasedPossibility);
             }
@@ -294,28 +307,24 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
 
         int rowNum = cellNum / 9;
         int workingIndex = cellNum - 1;
-        while(workingIndex / 9 == rowNum && !result) {
-            cells[workingIndex].removePossibility(zeroBasedPossibility);
+        while(workingIndex >= 0 && workingIndex / 9 == rowNum && !result) {
             result = cells[workingIndex].getOneBasedChosenNumber() == zeroBasedPossibility + 1;
             workingIndex--;
         }
         workingIndex = cellNum + 1;
-        while(workingIndex / 9 == rowNum && !result) {
-            cells[workingIndex].removePossibility(zeroBasedPossibility);
+        while(workingIndex >= 0 && workingIndex / 9 == rowNum && !result) {
             result = cells[workingIndex].getOneBasedChosenNumber() == zeroBasedPossibility + 1;
             workingIndex++;
         }
 
         int columnNum = cellNum % 9;
         workingIndex = cellNum - 9;
-        while(workingIndex > 0 && !result) {
-            cells[workingIndex].removePossibility(zeroBasedPossibility);
+        while(workingIndex >= 0 && !result) {
             result = cells[workingIndex].getOneBasedChosenNumber() == zeroBasedPossibility + 1;
             workingIndex += -9;
         }
         workingIndex = cellNum + 9;
-        while(workingIndex < cells.length && !result) {
-            cells[workingIndex].removePossibility(zeroBasedPossibility);
+        while(workingIndex >= 0 && workingIndex < cells.length && !result) {
             result = cells[workingIndex].getOneBasedChosenNumber() == zeroBasedPossibility + 1;
             workingIndex += 9;
         }
@@ -324,50 +333,42 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
         //Brute-force try two rows above and two rows below
         int blockNum = figureBlockNumForCell(cellNum);
         workingIndex = cellNum - 10;
-        while(figureBlockNumForCell(workingIndex) == blockNum && !result) {
-            cells[workingIndex].removePossibility(zeroBasedPossibility);
+        while(workingIndex >=0 && figureBlockNumForCell(workingIndex) == blockNum && !result) {
             result = cells[workingIndex].getOneBasedChosenNumber() == zeroBasedPossibility + 1;
             workingIndex--;
         }
         workingIndex = cellNum - 8;
-        while(figureBlockNumForCell(workingIndex) == blockNum && !result) {
-            cells[workingIndex].removePossibility(zeroBasedPossibility);
+        while(workingIndex >=0 && figureBlockNumForCell(workingIndex) == blockNum && !result) {
             result = cells[workingIndex].getOneBasedChosenNumber() == zeroBasedPossibility + 1;
             workingIndex++;
         }
         workingIndex = cellNum - 19;
-        while(figureBlockNumForCell(workingIndex) == blockNum && !result) {
-            cells[workingIndex].removePossibility(zeroBasedPossibility);
+        while(workingIndex >=0 && figureBlockNumForCell(workingIndex) == blockNum && !result) {
             result = cells[workingIndex].getOneBasedChosenNumber() == zeroBasedPossibility + 1;
             workingIndex--;
         }
         workingIndex = cellNum - 17;
-        while(figureBlockNumForCell(workingIndex) == blockNum && !result) {
-            cells[workingIndex].removePossibility(zeroBasedPossibility);
+        while(workingIndex >=0 && figureBlockNumForCell(workingIndex) == blockNum && !result) {
             result = cells[workingIndex].getOneBasedChosenNumber() == zeroBasedPossibility + 1;
             workingIndex++;
         }
         workingIndex = cellNum + 8;
-        while(figureBlockNumForCell(workingIndex) == blockNum && !result) {
-            cells[workingIndex].removePossibility(zeroBasedPossibility);
+        while(workingIndex >=0 && figureBlockNumForCell(workingIndex) == blockNum && !result) {
             result = cells[workingIndex].getOneBasedChosenNumber() == zeroBasedPossibility + 1;
             workingIndex--;
         }
         workingIndex = cellNum + 10;
-        while(figureBlockNumForCell(workingIndex) == blockNum && !result) {
-            cells[workingIndex].removePossibility(zeroBasedPossibility);
+        while(workingIndex >=0 && figureBlockNumForCell(workingIndex) == blockNum && !result) {
             result = cells[workingIndex].getOneBasedChosenNumber() == zeroBasedPossibility + 1;
             workingIndex++;
         }
         workingIndex = cellNum + 17;
-        while(figureBlockNumForCell(workingIndex) == blockNum && !result) {
-            cells[workingIndex].removePossibility(zeroBasedPossibility);
+        while(workingIndex >=0 && figureBlockNumForCell(workingIndex) == blockNum && !result) {
             result = cells[workingIndex].getOneBasedChosenNumber() == zeroBasedPossibility + 1;
             workingIndex--;
         }
         workingIndex = cellNum + 19;
-        while(figureBlockNumForCell(workingIndex) == blockNum && !result) {
-            cells[workingIndex].removePossibility(zeroBasedPossibility);
+        while(workingIndex >=0 && figureBlockNumForCell(workingIndex) == blockNum && !result) {
             result = cells[workingIndex].getOneBasedChosenNumber() == zeroBasedPossibility + 1;
             workingIndex++;
         }
@@ -424,7 +425,8 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
     @Override
     public boolean onLongClick(View v) {
         Toast.makeText(getContext(), "Long-Pressed Cell " + v.getTag(), Toast.LENGTH_SHORT).show();
+        ((Cell)v).toggleMarked();
         //todo
-        return false;
+        return true;
     }
 }

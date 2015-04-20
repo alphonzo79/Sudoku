@@ -2,7 +2,9 @@ package rowley.sudoku.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import rowley.sudoku.R;
@@ -83,7 +85,7 @@ public class Cell extends FrameLayout {
         chosenNumber = 0;
         chosenNumDisplay.setText("");
         chosenNumDisplay.setVisibility(GONE);
-        if(result >= 0) {
+        if(result > 0) {
             possibilities[result - 1] = true;
         }
 

@@ -9,9 +9,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:gravity="center"
         tools:text="9"
         android:maxLength="1"
-        android:textSize="48sp"
+        android:textSize="12sp"
         android:textColor="@android:color/black"/>
 
     <TextView
@@ -21,7 +22,7 @@
         android:layout_gravity="center"
         tools:text="1 2 3\n4 5 6\n7"
         android:gravity="center_horizontal"
-        android:textSize="16sp"
+        android:textSize="6sp"
         android:textColor="@android:color/darker_gray" />
 
 </FrameLayout>

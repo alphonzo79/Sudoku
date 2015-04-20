@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <level-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:minLevel="0">
+    <item android:maxLevel="0">
         <shape>
             <stroke
                 android:color="@android:color/black"
@@ -9,7 +9,7 @@
         </shape>
     </item>
 
-    <item android:minLevel="1">
+    <item android:maxLevel="1">
         <shape>
             <stroke
                 android:color="@android:color/black"
