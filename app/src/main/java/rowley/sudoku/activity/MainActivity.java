@@ -54,6 +54,6 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        board.initializeBoard(100);
+        board.initializeBoard(1000000000000000000000000D);
     }
 }

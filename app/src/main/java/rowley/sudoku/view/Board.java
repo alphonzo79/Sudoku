@@ -74,12 +74,14 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
         }
 
         boolean shouldContinue = true;
+        int count = 0;
         while(shouldContinue) {
             int cellIndex = rand.nextInt(cells.length);
             int retrieved = cells[cellIndex].removeOneBasedChosenNumber();
             if(retrieved > 0) {
+                count++;
                 addPossibilityToCounterparts(retrieved - 1, cellIndex);
-                Log.d("JAR", "Found complexity of " + estimateComplexity());
+                Log.d("JAR", "Found complexity of " + estimateComplexity() + " after removing " + count);
                 shouldContinue = estimateComplexity() < targetComplexity;
             }
         }

@@ -148,13 +148,14 @@ public class Cell extends FrameLayout {
 
     @Override
     protected void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-
         final int width = getDefaultSize(getSuggestedMinimumWidth(),widthMeasureSpec);
         if(width>this.squareWidth)
         {
             this.squareWidth = width;
         }
         setMeasuredDimension(this.squareWidth, this.squareWidth);
+
+        int newWidthMeasureSpec = MeasureSpec.makeMeasureSpec( this.squareWidth, MeasureSpec.EXACTLY );
+        super.onMeasure(newWidthMeasureSpec, newWidthMeasureSpec);
     }
 }
