@@ -92,9 +92,9 @@ public class SetCellDialogFragment extends DialogFragment implements View.OnClic
         clear.setOnClickListener(this);
 
         boolean[] possibilities = getArguments().getBooleanArray(POSSIBILITIES_KEY);
-        for(int i = 0; i < possibilities.length; i++) {
-            cells[i].setEnabled(possibilities[i]);
-        }
+//        for(int i = 0; i < possibilities.length; i++) {
+//            cells[i].setEnabled(possibilities[i]);
+//        }
 
         return root;
     }
