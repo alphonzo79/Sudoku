@@ -423,6 +423,11 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
     }
 
     public void setNumToCell(int oneBasedChosenNumber, int cellIndex) {
+        int alreadySet = cells[cellIndex].getOneBasedChosenNumber();
+        if(alreadySet != 0) {
+            clearCell(cellIndex);
+        }
+        
         cells[cellIndex].setChosenNumber(oneBasedChosenNumber, true);
         if(!removePossibilityFromCounterparts(oneBasedChosenNumber - 1, cellIndex) && warnOnBadEntry) {
             cells[cellIndex].removeOneBasedChosenNumber();
