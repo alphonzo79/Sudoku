@@ -128,13 +128,17 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
         int workingIndex = cellNum - 1;
         while(workingIndex >= 0 && workingIndex / 9 == rowNum) {
             cells[workingIndex].removePossibility(zeroBasedPossibility);
-            success = doesCellHaveMoreThanZeroPossibilities(cells[workingIndex]) || cells[workingIndex].getOneBasedChosenNumber() > 0;
+            if(!(doesCellHaveMoreThanZeroPossibilities(cells[workingIndex]) || cells[workingIndex].getOneBasedChosenNumber() > 0)) {
+                success = false;
+            }
             workingIndex--;
         }
         workingIndex = cellNum + 1;
         while(workingIndex >= 0 && workingIndex / 9 == rowNum) {
             cells[workingIndex].removePossibility(zeroBasedPossibility);
-            success = doesCellHaveMoreThanZeroPossibilities(cells[workingIndex]) || cells[workingIndex].getOneBasedChosenNumber() > 0;
+            if(!(doesCellHaveMoreThanZeroPossibilities(cells[workingIndex]) || cells[workingIndex].getOneBasedChosenNumber() > 0)) {
+                success = false;
+            }
             workingIndex++;
         }
 
@@ -142,13 +146,17 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
         workingIndex = cellNum - 9;
         while(workingIndex >= 0) {
             cells[workingIndex].removePossibility(zeroBasedPossibility);
-            success = doesCellHaveMoreThanZeroPossibilities(cells[workingIndex]) || cells[workingIndex].getOneBasedChosenNumber() > 0;
+            if(!(doesCellHaveMoreThanZeroPossibilities(cells[workingIndex]) || cells[workingIndex].getOneBasedChosenNumber() > 0)) {
+                success = false;
+            }
             workingIndex += -9;
         }
         workingIndex = cellNum + 9;
         while(workingIndex >= 0 && workingIndex < cells.length) {
             cells[workingIndex].removePossibility(zeroBasedPossibility);
-            success = doesCellHaveMoreThanZeroPossibilities(cells[workingIndex]) || cells[workingIndex].getOneBasedChosenNumber() > 0;
+            if(!(doesCellHaveMoreThanZeroPossibilities(cells[workingIndex]) || cells[workingIndex].getOneBasedChosenNumber() > 0)) {
+                success = false;
+            }
             workingIndex += 9;
         }
 
@@ -158,49 +166,65 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
         workingIndex = cellNum - 10;
         while(workingIndex >=0 && figureBlockNumForCell(workingIndex) == blockNum) {
             cells[workingIndex].removePossibility(zeroBasedPossibility);
-            success = doesCellHaveMoreThanZeroPossibilities(cells[workingIndex]) || cells[workingIndex].getOneBasedChosenNumber() > 0;
+            if(!(doesCellHaveMoreThanZeroPossibilities(cells[workingIndex]) || cells[workingIndex].getOneBasedChosenNumber() > 0)) {
+                success = false;
+            }
             workingIndex--;
         }
         workingIndex = cellNum - 8;
         while(workingIndex >=0 && figureBlockNumForCell(workingIndex) == blockNum) {
             cells[workingIndex].removePossibility(zeroBasedPossibility);
-            success = doesCellHaveMoreThanZeroPossibilities(cells[workingIndex]) || cells[workingIndex].getOneBasedChosenNumber() > 0;
+            if(!(doesCellHaveMoreThanZeroPossibilities(cells[workingIndex]) || cells[workingIndex].getOneBasedChosenNumber() > 0)) {
+                success = false;
+            }
             workingIndex++;
         }
         workingIndex = cellNum - 19;
         while(workingIndex >=0 && figureBlockNumForCell(workingIndex) == blockNum) {
             cells[workingIndex].removePossibility(zeroBasedPossibility);
-            success = doesCellHaveMoreThanZeroPossibilities(cells[workingIndex]) || cells[workingIndex].getOneBasedChosenNumber() > 0;
+            if(!(doesCellHaveMoreThanZeroPossibilities(cells[workingIndex]) || cells[workingIndex].getOneBasedChosenNumber() > 0)) {
+                success = false;
+            }
             workingIndex--;
         }
         workingIndex = cellNum - 17;
         while(workingIndex >=0 && figureBlockNumForCell(workingIndex) == blockNum) {
             cells[workingIndex].removePossibility(zeroBasedPossibility);
-            success = doesCellHaveMoreThanZeroPossibilities(cells[workingIndex]) || cells[workingIndex].getOneBasedChosenNumber() > 0;
+            if(!(doesCellHaveMoreThanZeroPossibilities(cells[workingIndex]) || cells[workingIndex].getOneBasedChosenNumber() > 0)) {
+                success = false;
+            }
             workingIndex++;
         }
         workingIndex = cellNum + 8;
         while(workingIndex >=0 && figureBlockNumForCell(workingIndex) == blockNum) {
             cells[workingIndex].removePossibility(zeroBasedPossibility);
-            success = doesCellHaveMoreThanZeroPossibilities(cells[workingIndex]) || cells[workingIndex].getOneBasedChosenNumber() > 0;
+            if(!(doesCellHaveMoreThanZeroPossibilities(cells[workingIndex]) || cells[workingIndex].getOneBasedChosenNumber() > 0)) {
+                success = false;
+            }
             workingIndex--;
         }
         workingIndex = cellNum + 10;
         while(workingIndex >=0 && figureBlockNumForCell(workingIndex) == blockNum) {
             cells[workingIndex].removePossibility(zeroBasedPossibility);
-            success = doesCellHaveMoreThanZeroPossibilities(cells[workingIndex]) || cells[workingIndex].getOneBasedChosenNumber() > 0;
+            if(!(doesCellHaveMoreThanZeroPossibilities(cells[workingIndex]) || cells[workingIndex].getOneBasedChosenNumber() > 0)) {
+                success = false;
+            }
             workingIndex++;
         }
         workingIndex = cellNum + 17;
         while(workingIndex >=0 && figureBlockNumForCell(workingIndex) == blockNum) {
             cells[workingIndex].removePossibility(zeroBasedPossibility);
-            success = doesCellHaveMoreThanZeroPossibilities(cells[workingIndex]) || cells[workingIndex].getOneBasedChosenNumber() > 0;
+            if(!(doesCellHaveMoreThanZeroPossibilities(cells[workingIndex]) || cells[workingIndex].getOneBasedChosenNumber() > 0)) {
+                success = false;
+            }
             workingIndex--;
         }
         workingIndex = cellNum + 19;
         while(workingIndex >=0 && figureBlockNumForCell(workingIndex) == blockNum) {
             cells[workingIndex].removePossibility(zeroBasedPossibility);
-            success = doesCellHaveMoreThanZeroPossibilities(cells[workingIndex]) || cells[workingIndex].getOneBasedChosenNumber() > 0;
+            if(!(doesCellHaveMoreThanZeroPossibilities(cells[workingIndex]) || cells[workingIndex].getOneBasedChosenNumber() > 0)) {
+                success = false;
+            }
             workingIndex++;
         }
 
@@ -443,7 +467,7 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
         }
 
         cells[cellIndex].setChosenNumber(oneBasedChosenNumber, true);
-        boolean validMove = !removePossibilityFromCounterparts(oneBasedChosenNumber - 1, cellIndex);
+        boolean validMove = removePossibilityFromCounterparts(oneBasedChosenNumber - 1, cellIndex);
         if(warnOnBadEntry) {
             if(validMove) {
                 validMove = !isPossibilitySetAsChosenInCounterpart(oneBasedChosenNumber - 1, cellIndex);
