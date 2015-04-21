@@ -429,11 +429,17 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
         }
 
         cells[cellIndex].setChosenNumber(oneBasedChosenNumber, true);
-        if(!removePossibilityFromCounterparts(oneBasedChosenNumber - 1, cellIndex) && warnOnBadEntry) {
-            cells[cellIndex].removeOneBasedChosenNumber();
-            addPossibilityToCounterparts(oneBasedChosenNumber - 1, cellIndex);
+        boolean validMove = !removePossibilityFromCounterparts(oneBasedChosenNumber - 1, cellIndex);
+        if(warnOnBadEntry) {
+            if(validMove) {
+                validMove = !isPossibilitySetAsChosenInCounterpart(oneBasedChosenNumber - 1, cellIndex);
+            }
+            if(!validMove) {
+                cells[cellIndex].removeOneBasedChosenNumber();
+                addPossibilityToCounterparts(oneBasedChosenNumber - 1, cellIndex);
 
-            Toast.makeText(getContext(), R.string.bad_move_warning, Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), R.string.bad_move_warning, Toast.LENGTH_LONG).show();
+            }
         }
     }
 
