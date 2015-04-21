@@ -8,10 +8,12 @@ import android.view.MenuItem;
 import android.view.View;
 
 import rowley.sudoku.R;
+import rowley.sudoku.fragment.SetCellDialogFragment;
 import rowley.sudoku.view.Board;
 
 
-public class MainActivity extends ActionBarActivity implements View.OnClickListener {
+public class MainActivity extends ActionBarActivity implements View.OnClickListener, Board.BoardListener,
+        SetCellDialogFragment.SetCellFragListener {
     private Board board;
 
     @Override
@@ -54,6 +56,23 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        board.initializeBoard(1000000000000000000000000D);
+        board.initializeBoard(1000000000);
+    }
+
+    @Override
+    public void onShowSetCellFrag(boolean[] possibilities, int cellIndex) {
+        SetCellDialogFragment frag = SetCellDialogFragment.newInstance(possibilities, cellIndex);
+        frag.setCancelable(true);
+        frag.show(getFragmentManager(), "");
+    }
+
+    @Override
+    public void onClear(int cellIndex) {
+        board.clearCell(cellIndex);
+    }
+
+    @Override
+    public void onCellSet(int oneBasedNumChosen, int cellIndex) {
+        board.setNumToCell(oneBasedNumChosen, cellIndex);
     }
 }

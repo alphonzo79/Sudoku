@@ -13,4 +13,14 @@
     <color name="tagged_color_four">#FF88FFFF</color>
     <color name="tagged_color_five">#FFFFFF88</color>
     <color name="tagged_color_six">#FFFF88FF</color>
+
+    <color name="selector_disabled_back">#FFDDDDDD</color>
+    <color name="selector_enabled_back">#FFFFFFFF</color>
+    <color name="selector_pressed_back">#FFDFAFFF</color>
+
+    <color name="button_disabled_back">#FFDDDDDD</color>
+    <color name="button_enabled_back">#ff9bff9f</color>
+    <color name="button_pressed_back">#ff2aff20</color>
+
+    <color name="dialog_frag_back">#ffffcee7</color>
 </resources>

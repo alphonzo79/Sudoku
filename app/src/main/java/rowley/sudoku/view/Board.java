@@ -74,16 +74,10 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
         }
 
         boolean shouldContinue = true;
-        int count = 0;
         while(shouldContinue) {
             int cellIndex = rand.nextInt(cells.length);
-            int retrieved = cells[cellIndex].removeOneBasedChosenNumber();
-            if(retrieved > 0) {
-                count++;
-                addPossibilityToCounterparts(retrieved - 1, cellIndex);
-                Log.d("JAR", "Found complexity of " + estimateComplexity() + " after removing " + count);
-                shouldContinue = estimateComplexity() < targetComplexity;
-            }
+            clearCell(cellIndex);
+            shouldContinue = estimateComplexity() < targetComplexity;
         }
 
         for(Cell cell : cells) {
@@ -418,10 +412,30 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
         return result;
     }
 
+    public void clearCell(int cellIndex) {
+        int retrieved = cells[cellIndex].removeOneBasedChosenNumber();
+        if(retrieved > 0) {
+            addPossibilityToCounterparts(retrieved - 1, cellIndex);
+            Log.d("JAR", "Found complexity of " + estimateComplexity());
+        }
+    }
+
+    public void setNumToCell(int oneBasedChosenNumber, int cellIndex) {
+        cells[cellIndex].setChosenNumber(oneBasedChosenNumber, true);
+        if(!removePossibilityFromCounterparts(oneBasedChosenNumber - 1, cellIndex)) {
+            cells[cellIndex].removeOneBasedChosenNumber();
+            addPossibilityToCounterparts(oneBasedChosenNumber - 1, cellIndex);
+
+            Toast.makeText(getContext(), R.string.bad_move_warning, Toast.LENGTH_LONG).show();
+        }
+    }
+
     @Override
     public void onClick(View v) {
-        Toast.makeText(getContext(), "Pressed Cell " + v.getTag(), Toast.LENGTH_SHORT).show();
-        //todo
+        if(getContext() instanceof BoardListener) {
+            int index = Integer.parseInt((String)v.getTag());
+            ((BoardListener)getContext()).onShowSetCellFrag(cells[index].getPossibilities(), index);
+        }
     }
 
     @Override
@@ -430,5 +444,9 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
         ((Cell)v).toggleMarked();
         //todo
         return true;
+    }
+
+    public interface BoardListener {
+        public void onShowSetCellFrag(boolean[] possibilities, int cellIndex);
     }
 }

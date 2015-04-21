@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="15dp"
+    android:background="@color/dialog_frag_back">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignBottom="@+id/row_3"
+        android:background="@drawable/selector_grid_back" />
+
+    <LinearLayout
+        android:id="@+id/row_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="1dp"
+        android:layout_marginRight="1dp"
+        android:layout_marginTop="1dp"
+        android:orientation="horizontal">
+
+        <rowley.sudoku.view.SquareTextView
+            android:id="@+id/select_1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="48sp"
+            android:textColor="@android:color/black"
+            android:background="@drawable/selector_cell_back"
+            android:gravity="center"
+            android:text="@string/one"/>
+
+        <rowley.sudoku.view.SquareTextView
+            android:id="@+id/select_2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="48sp"
+            android:textColor="@android:color/black"
+            android:background="@drawable/selector_cell_back"
+            android:gravity="center"
+            android:text="@string/two"/>
+
+        <rowley.sudoku.view.SquareTextView
+            android:id="@+id/select_3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="48sp"
+            android:textColor="@android:color/black"
+            android:background="@drawable/selector_cell_back"
+            android:gravity="center"
+            android:text="@string/three"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/row_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="1dp"
+        android:layout_marginRight="1dp"
+        android:layout_below="@id/row_1"
+        android:orientation="horizontal">
+
+        <rowley.sudoku.view.SquareTextView
+            android:id="@+id/select_4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="48sp"
+            android:textColor="@android:color/black"
+            android:background="@drawable/selector_cell_back"
+            android:gravity="center"
+            android:text="@string/four"/>
+
+        <rowley.sudoku.view.SquareTextView
+            android:id="@+id/select_5"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="48sp"
+            android:textColor="@android:color/black"
+            android:background="@drawable/selector_cell_back"
+            android:gravity="center"
+            android:text="@string/five"/>
+
+        <rowley.sudoku.view.SquareTextView
+            android:id="@+id/select_6"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="48sp"
+            android:textColor="@android:color/black"
+            android:background="@drawable/selector_cell_back"
+            android:gravity="center"
+            android:text="@string/six"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/row_3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="1dp"
+        android:layout_marginRight="1dp"
+        android:layout_marginBottom="1dp"
+        android:layout_below="@id/row_2"
+        android:orientation="horizontal">
+
+        <rowley.sudoku.view.SquareTextView
+            android:id="@+id/select_7"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="48sp"
+            android:textColor="@android:color/black"
+            android:background="@drawable/selector_cell_back"
+            android:gravity="center"
+            android:text="@string/seven"/>
+
+        <rowley.sudoku.view.SquareTextView
+            android:id="@+id/select_8"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="48sp"
+            android:textColor="@android:color/black"
+            android:background="@drawable/selector_cell_back"
+            android:gravity="center"
+            android:text="@string/eight"/>
+
+        <rowley.sudoku.view.SquareTextView
+            android:id="@+id/select_9"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="48sp"
+            android:textColor="@android:color/black"
+            android:background="@drawable/selector_cell_back"
+            android:gravity="center"
+            android:text="@string/nine"/>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/clear_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/row_3"
+        android:layout_marginTop="25dp"
+        android:layout_centerHorizontal="true"
+        android:padding="15dp"
+        android:background="@drawable/button_back"
+        android:text="@string/clear_cell"
+        />
+
+</RelativeLayout>
