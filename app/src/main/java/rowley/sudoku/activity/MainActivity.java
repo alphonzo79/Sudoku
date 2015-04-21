@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import rowley.sudoku.R;
 import rowley.sudoku.fragment.SetCellDialogFragment;
@@ -88,6 +89,11 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         SetCellDialogFragment frag = SetCellDialogFragment.newInstance(possibilities, cellIndex);
         frag.setCancelable(true);
         frag.show(getFragmentManager(), "");
+    }
+
+    @Override
+    public void onComplete() {
+        Toast.makeText(this, "Good Job", Toast.LENGTH_SHORT).show();
     }
 
     @Override

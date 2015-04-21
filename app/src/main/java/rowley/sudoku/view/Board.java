@@ -84,6 +84,7 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
 
         for(Cell cell : cells) {
             cell.finalizeCell();
+            cell.setEnabled(true);
         }
 
         Log.d("JAR", "Time to create: " + (System.currentTimeMillis() - startTime));
@@ -414,6 +415,19 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
         return result;
     }
 
+    private boolean isCompleted() {
+        boolean result = true;
+
+        for(Cell cell : cells) {
+            if(cell.getOneBasedChosenNumber() == 0) {
+                result = false;
+                break;
+            }
+        }
+
+        return result;
+    }
+
     public void clearCell(int cellIndex) {
         int retrieved = cells[cellIndex].removeOneBasedChosenNumber();
         if(retrieved > 0) {
@@ -441,6 +455,13 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
                 Toast.makeText(getContext(), R.string.bad_move_warning, Toast.LENGTH_LONG).show();
             }
         }
+
+        if(isCompleted()) {
+            for(Cell cell: cells) {
+                cell.setEnabled(false);
+            }
+            ((BoardListener)getContext()).onComplete();
+        }
     }
 
     public void setWarnOnBadEntry(boolean warnOnBadEntry) {
@@ -465,5 +486,6 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
 
     public interface BoardListener {
         public void onShowSetCellFrag(boolean[] possibilities, int cellIndex);
+        public void onComplete();
     }
 }
