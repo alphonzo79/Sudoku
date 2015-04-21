@@ -443,7 +443,11 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
         boolean result = true;
 
         for(Cell cell : cells) {
-            if(cell.getOneBasedChosenNumber() == 0) {
+            int chosenNum = cell.getOneBasedChosenNumber();
+            if(chosenNum == 0) {
+                result = false;
+                break;
+            } else if(isPossibilitySetAsChosenInCounterpart(chosenNum - 1, Integer.valueOf((String)cell.getTag()))) {
                 result = false;
                 break;
             }
