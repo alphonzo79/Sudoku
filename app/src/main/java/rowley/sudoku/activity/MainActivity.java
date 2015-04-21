@@ -1,5 +1,6 @@
 package rowley.sudoku.activity;
 
+import android.content.SharedPreferences;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.view.View;
 
 import rowley.sudoku.R;
 import rowley.sudoku.fragment.SetCellDialogFragment;
+import rowley.sudoku.util.SharedPrefsHelper;
 import rowley.sudoku.view.Board;
 
 
@@ -21,6 +23,8 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        warnOnBadEntry = SharedPrefsHelper.getProtectAgainstBadMoves(this);
 
         board = (Board)findViewById(R.id.board);
         board.setWarnOnBadEntry(warnOnBadEntry);
@@ -42,15 +46,33 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if(warnOnBadEntry) {
+            menu.findItem(R.id.action_protect).setVisible(false);
+            menu.findItem(R.id.action_dont_protect).setVisible(true);
+        } else {
+            menu.findItem(R.id.action_protect).setVisible(true);
+            menu.findItem(R.id.action_dont_protect).setVisible(false);
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.action_protect:
+                warnOnBadEntry = true;
+                SharedPrefsHelper.setProtectAgainstBadMoves(this, warnOnBadEntry);
+                board.setWarnOnBadEntry(warnOnBadEntry);
+                return true;
+            case R.id.action_dont_protect:
+                warnOnBadEntry = false;
+                SharedPrefsHelper.setProtectAgainstBadMoves(this, warnOnBadEntry);
+                board.setWarnOnBadEntry(warnOnBadEntry);
+                return true;
         }
 
         return super.onOptionsItemSelected(item);

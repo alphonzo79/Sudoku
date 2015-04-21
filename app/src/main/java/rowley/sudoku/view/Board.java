@@ -427,7 +427,7 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
         if(alreadySet != 0) {
             clearCell(cellIndex);
         }
-        
+
         cells[cellIndex].setChosenNumber(oneBasedChosenNumber, true);
         if(!removePossibilityFromCounterparts(oneBasedChosenNumber - 1, cellIndex) && warnOnBadEntry) {
             cells[cellIndex].removeOneBasedChosenNumber();

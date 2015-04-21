@@ -2,7 +2,8 @@
     <string name="app_name">Sudoku</string>
 
     <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_guard_against_bad">Protect Me Against Bad moves</string>
+    <string name="action_allow_bad">Don't Protect Me Against Bad Moves</string>
 
     <string name="failed_to_build_board">Failed to create a board. Try again?</string>
     <string name="ok">Ok</string>
