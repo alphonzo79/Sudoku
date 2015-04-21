@@ -15,6 +15,7 @@ import rowley.sudoku.view.Board;
 public class MainActivity extends ActionBarActivity implements View.OnClickListener, Board.BoardListener,
         SetCellDialogFragment.SetCellFragListener {
     private Board board;
+    private boolean warnOnBadEntry = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +23,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         board = (Board)findViewById(R.id.board);
+        board.setWarnOnBadEntry(warnOnBadEntry);
 
         findViewById(R.id.temp_button).setOnClickListener(this);
     }
