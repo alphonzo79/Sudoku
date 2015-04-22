@@ -49,6 +49,7 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
                 Cell cell = (Cell) findViewWithTag(String.valueOf(i));
                 cell.setOnClickListener(this);
                 cell.setOnLongClickListener(this);
+                cell.setEnabled(false);
                 cells[i] = cell;
             }
         }
@@ -79,12 +80,12 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
         while(shouldContinue) {
             int cellIndex = rand.nextInt(cells.length);
             clearCell(cellIndex);
+            cells[cellIndex].setEnabled(true);
             shouldContinue = estimateComplexity() < targetComplexity;
         }
 
         for(Cell cell : cells) {
             cell.finalizeCell();
-            cell.setEnabled(true);
         }
 
         Log.d("JAR", "Time to create: " + (System.currentTimeMillis() - startTime));
