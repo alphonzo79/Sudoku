@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import rowley.sudoku.R;
+import rowley.sudoku.fragment.MarkCellDialogFragment;
 import rowley.sudoku.fragment.SetCellDialogFragment;
 import rowley.sudoku.util.DifficultyLevel;
 import rowley.sudoku.util.SharedPrefsHelper;
@@ -15,7 +16,7 @@ import rowley.sudoku.view.Board;
 
 
 public class MainActivity extends ActionBarActivity implements View.OnClickListener, Board.BoardListener,
-        SetCellDialogFragment.SetCellFragListener {
+        SetCellDialogFragment.SetCellFragListener, MarkCellDialogFragment.MarkCellFragListener {
     private Board board;
     private boolean warnOnBadEntry = false;
     private DifficultyLevel difficultyLevel;
@@ -88,7 +89,18 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
     @Override
     public void onShowSetCellFrag(boolean[] possibilities, int cellIndex) {
+        //todo show education if needed
+
         SetCellDialogFragment frag = SetCellDialogFragment.newInstance(possibilities, cellIndex);
+        frag.setCancelable(true);
+        frag.show(getFragmentManager(), "");
+    }
+
+    @Override
+    public void onShowMarkCellFrag(boolean[] markedPossibilities, boolean isMarked, int cellIndex) {
+        //todo show education if needed
+
+        MarkCellDialogFragment frag = MarkCellDialogFragment.newInstance(markedPossibilities, isMarked, cellIndex);
         frag.setCancelable(true);
         frag.show(getFragmentManager(), "");
     }
@@ -106,5 +118,15 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     @Override
     public void onCellSet(int oneBasedNumChosen, int cellIndex) {
         board.setNumToCell(oneBasedNumChosen, cellIndex);
+    }
+
+    @Override
+    public void onSaveNotes(boolean[] markedPossibilities, int cellIndex) {
+        board.setMarksToCell(markedPossibilities, cellIndex);
+    }
+
+    @Override
+    public void onMarkCell(boolean isMarked, int cellIndex) {
+        board.markCellAsPivot(isMarked, cellIndex);
     }
 }

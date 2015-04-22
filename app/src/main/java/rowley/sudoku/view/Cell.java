@@ -99,18 +99,21 @@ public class Cell extends FrameLayout {
         StringBuilder builder = new StringBuilder();
         for(int i = 0; i < markedGuesses.length; i++) {
             if(markedGuesses[i]) {
-                if (builder.length() % 5 == 0) {
+                if (builder.length() == 5 || builder.length() == 11) {
                     builder.append("\n");
                 } else if (builder.length() > 0) {
                     builder.append(" ");
                 }
-                builder.append(i);
+                builder.append(i + 1);
             }
         }
         guessesDisplay.setText(builder.toString());
-        guessesDisplay.setVisibility(VISIBLE);
-
-        chosenNumDisplay.setVisibility(GONE);
+        if(builder.length() > 0) {
+            guessesDisplay.setVisibility(VISIBLE);
+            chosenNumDisplay.setVisibility(GONE);
+        } else {
+            guessesDisplay.setVisibility(GONE);
+        }
 
         builder = null;
     }
@@ -123,9 +126,9 @@ public class Cell extends FrameLayout {
         return possibilities;
     }
 
-    public void toggleMarked() {
-        isMarked = !isMarked;
-        getBackground().setLevel(isMarked ? 1 : 0);
+    public void toggleMarked(boolean isMarked) {
+        this.isMarked = isMarked;
+        getBackground().setLevel(this.isMarked ? 1 : 0);
     }
 
     public boolean getIsMarked() {

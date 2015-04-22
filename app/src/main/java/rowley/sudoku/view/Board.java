@@ -493,6 +493,14 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
         }
     }
 
+    public void setMarksToCell(boolean[] markedPossibilities, int cellIndex) {
+        cells[cellIndex].setMarkedGuesses(markedPossibilities);
+    }
+
+    public void markCellAsPivot(boolean isMarked, int cellIndex) {
+        cells[cellIndex].toggleMarked(isMarked);
+    }
+
     public void setWarnOnBadEntry(boolean warnOnBadEntry) {
         this.warnOnBadEntry = warnOnBadEntry;
     }
@@ -507,14 +515,16 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
 
     @Override
     public boolean onLongClick(View v) {
-        Toast.makeText(getContext(), "Long-Pressed Cell " + v.getTag(), Toast.LENGTH_SHORT).show();
-        ((Cell)v).toggleMarked();
-        //todo
+        if(getContext() instanceof BoardListener) {
+            int index = Integer.parseInt((String)v.getTag());
+            ((BoardListener)getContext()).onShowMarkCellFrag(cells[index].getMarkedGuesses(), cells[index].getIsMarked(), index);
+        }
         return true;
     }
 
     public interface BoardListener {
         public void onShowSetCellFrag(boolean[] possibilities, int cellIndex);
+        public void onShowMarkCellFrag(boolean[] markedPossibilities, boolean isMarked, int cellIndex);
         public void onComplete();
     }
 }
