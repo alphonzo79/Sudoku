@@ -1,5 +1,6 @@
 package rowley.sudoku.activity;
 
+import android.app.AlertDialog;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -21,6 +22,9 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     private boolean warnOnBadEntry = false;
     private DifficultyLevel difficultyLevel;
 
+    private boolean hasDismissedRegular = false;
+    private boolean hasDismissedLong = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +33,8 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         warnOnBadEntry = SharedPrefsHelper.getProtectAgainstBadMoves(this);
         String levelString = SharedPrefsHelper.getDifficultyLevelString(this);
         difficultyLevel = DifficultyLevel.getLevelForString(levelString);
+        hasDismissedRegular = SharedPrefsHelper.getHasDismissedRegularClickEducation(this);
+        hasDismissedLong = SharedPrefsHelper.getHasDismissedLongClickEducation(this);
 
         board = (Board)findViewById(R.id.board);
         board.setWarnOnBadEntry(warnOnBadEntry);

@@ -26,4 +26,6 @@
     <string name="clear_notes">Clear Notes</string>
 
     <string name="bad_move_warning">That selection either causes another cell to not have any valid entries available or is already set on another relevant cell. Please try a different number.</string>
+
+    <string name="dont_show_again">Don\'t Show Again</string>
 </resources>
