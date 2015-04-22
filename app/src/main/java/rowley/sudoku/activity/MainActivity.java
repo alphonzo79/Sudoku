@@ -1,9 +1,7 @@
 package rowley.sudoku.activity;
 
-import android.content.SharedPreferences;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,6 +9,7 @@ import android.widget.Toast;
 
 import rowley.sudoku.R;
 import rowley.sudoku.fragment.SetCellDialogFragment;
+import rowley.sudoku.util.DifficultyLevel;
 import rowley.sudoku.util.SharedPrefsHelper;
 import rowley.sudoku.view.Board;
 
@@ -19,6 +18,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         SetCellDialogFragment.SetCellFragListener {
     private Board board;
     private boolean warnOnBadEntry = false;
+    private DifficultyLevel difficultyLevel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +26,8 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         warnOnBadEntry = SharedPrefsHelper.getProtectAgainstBadMoves(this);
+        String levelString = SharedPrefsHelper.getDifficultyLevelString(this);
+        difficultyLevel = DifficultyLevel.getLevelForString(levelString);
 
         board = (Board)findViewById(R.id.board);
         board.setWarnOnBadEntry(warnOnBadEntry);
@@ -81,7 +83,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        board.initializeBoard(1000000000);
+        board.initializeBoard(difficultyLevel.getLevel());
     }
 
     @Override
