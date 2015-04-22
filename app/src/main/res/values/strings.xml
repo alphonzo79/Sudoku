@@ -20,6 +20,10 @@
     <string name="nine">9</string>
 
     <string name="clear_cell">Clear Cell</string>
+    <string name="mark_as_pivot">Mark Cell As Pivot Point</string>
+    <string name="clear_mark">Clear Mark On Cell</string>
+    <string name="save_notes">Save Notes</string>
+    <string name="clear_notes">Clear Notes</string>
 
     <string name="bad_move_warning">That selection either causes another cell to not have any valid entries available or is already set on another relevant cell. Please try a different number.</string>
 </resources>

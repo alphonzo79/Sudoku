@@ -23,4 +23,8 @@
     <color name="button_pressed_back">#ff2aff20</color>
 
     <color name="dialog_frag_back">#ffffcee7</color>
+
+    <color name="activated_not_pressed">#FFFFDEF7</color>
+    <color name="activated_pressed">#FFFFBED7</color>
+    <color name="unactivated_not_pressed">#FFFFFFFF</color>
 </resources>
