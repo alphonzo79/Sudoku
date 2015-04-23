@@ -27,5 +27,7 @@
 
     <string name="bad_move_warning">That selection either causes another cell to not have any valid entries available or is already set on another relevant cell. Please try a different number.</string>
 
+    <string name="regular_education">With a regular press you can set the number that you want to assign to this cell.\n\nUse a long press to note possible values for the cell and/or mark this cell as a pivot point.</string>
+    <string name="long_education">With a long press you can make note of possible values that might be valid for this cell, or clear those notes later. You can also mark this cell as a pivot point so you can remember where you want to test multiple possible values.\n\nUse a regular press to assign a value to the cell.</string>
     <string name="dont_show_again">Don\'t Show Again</string>
 </resources>

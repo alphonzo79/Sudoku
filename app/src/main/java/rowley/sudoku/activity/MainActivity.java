@@ -1,6 +1,7 @@
 package rowley.sudoku.activity;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -95,8 +96,34 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
     @Override
     public void onShowSetCellFrag(boolean[] possibilities, int cellIndex) {
-        //todo show education if needed
+        if (!hasDismissedRegular) {
+            final boolean[] finalPossibilities = possibilities;
+            final int finalCellIndex = cellIndex;
 
+            new AlertDialog.Builder(this).setMessage(R.string.regular_education).setCancelable(true).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            }).setNegativeButton(R.string.dont_show_again, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    hasDismissedRegular = true;
+                    SharedPrefsHelper.setHasDismissedRegularClickEducation(MainActivity.this);
+                    dialog.cancel();
+                }
+            }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    showSetCellFrag(finalPossibilities, finalCellIndex);
+                }
+            }).show();
+        } else {
+            showSetCellFrag(possibilities, cellIndex);
+        }
+    }
+
+    private void showSetCellFrag(boolean[] possibilities, int cellIndex) {
         SetCellDialogFragment frag = SetCellDialogFragment.newInstance(possibilities, cellIndex);
         frag.setCancelable(true);
         frag.show(getFragmentManager(), "");
@@ -104,8 +131,35 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
     @Override
     public void onShowMarkCellFrag(boolean[] markedPossibilities, boolean isMarked, int cellIndex) {
-        //todo show education if needed
+        if (!hasDismissedLong) {
+            final boolean[] finalPossibilities = markedPossibilities;
+            final boolean finalIsMarked = isMarked;
+            final int finalCellIndex = cellIndex;
 
+            new AlertDialog.Builder(this).setMessage(R.string.long_education).setCancelable(true).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            }).setNegativeButton(R.string.dont_show_again, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    hasDismissedLong = true;
+                    SharedPrefsHelper.setHasDismissedLongClickEducation(MainActivity.this);
+                    dialog.cancel();
+                }
+            }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    showMarkCellFrag(finalPossibilities, finalIsMarked, finalCellIndex);
+                }
+            }).show();
+        } else {
+            showMarkCellFrag(markedPossibilities, isMarked, cellIndex);
+        }
+    }
+
+    private void showMarkCellFrag(boolean[] markedPossibilities, boolean isMarked, int cellIndex) {
         MarkCellDialogFragment frag = MarkCellDialogFragment.newInstance(markedPossibilities, isMarked, cellIndex);
         frag.setCancelable(true);
         frag.show(getFragmentManager(), "");
