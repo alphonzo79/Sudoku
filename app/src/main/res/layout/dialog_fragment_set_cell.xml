@@ -155,6 +155,8 @@
         android:layout_centerHorizontal="true"
         android:padding="15dp"
         android:background="@drawable/button_back"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
         android:text="@string/clear_cell"
         />
 

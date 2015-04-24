@@ -157,6 +157,8 @@
         android:layout_centerHorizontal="true"
         android:padding="15dp"
         android:background="@drawable/button_back"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
         android:text="@string/mark_as_pivot" />
 
     <View
@@ -180,6 +182,8 @@
             android:layout_weight="50"
             android:padding="15dp"
             android:background="@drawable/bar_button_back"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
             android:text="@string/save_notes" />
 
         <View
@@ -194,6 +198,8 @@
             android:layout_weight="50"
             android:padding="15dp"
             android:background="@drawable/bar_button_back"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
             android:text="@string/clear_notes" />
 
     </LinearLayout>

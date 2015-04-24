@@ -2,12 +2,21 @@ package rowley.sudoku.activity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import java.lang.ref.WeakReference;
+import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import rowley.sudoku.R;
 import rowley.sudoku.fragment.MarkCellDialogFragment;
@@ -27,21 +36,39 @@ public class MainActivityParent extends ActionBarActivity implements View.OnClic
     private boolean hasDismissedRegular = false;
     private boolean hasDismissedLong = false;
 
+    private TextView clock, levelSelect, newGame;
+    private View undo;
+
+    private Timer timer;
+    private TimerTask timerTask;
+    private volatile int gameDurationSeconds = 0;
+    private ClockUpdateHandler clockUpdateHandler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         warnOnBadEntry = SharedPrefsHelper.getProtectAgainstBadMoves(this);
-        String levelString = SharedPrefsHelper.getDifficultyLevelString(this);
-        difficultyLevel = DifficultyLevel.getLevelForString(levelString);
         hasDismissedRegular = SharedPrefsHelper.getHasDismissedRegularClickEducation(this);
         hasDismissedLong = SharedPrefsHelper.getHasDismissedLongClickEducation(this);
 
         board = (Board)findViewById(R.id.board);
         board.setWarnOnBadEntry(warnOnBadEntry);
 
-        findViewById(R.id.temp_button).setOnClickListener(this);
+        clock = (TextView)findViewById(R.id.clock);
+        levelSelect = (TextView)findViewById(R.id.level_button);
+        levelSelect.setOnClickListener(this);
+        newGame = (TextView)findViewById(R.id.new_game_button);
+        newGame.setOnClickListener(this);
+        undo = findViewById(R.id.undo);
+        undo.setOnClickListener(this);
+
+        clockUpdateHandler = new ClockUpdateHandler(this);
+        timer = new Timer();
+
+        String levelString = SharedPrefsHelper.getDifficultyLevelString(this);
+        setDifficultyLevel(levelString);
     }
 
     @Override
@@ -92,7 +119,47 @@ public class MainActivityParent extends ActionBarActivity implements View.OnClic
 
     @Override
     public void onClick(View v) {
+        switch(v.getId()) {
+            case R.id.level_button:
+                //todo
+                break;
+            case R.id.new_game_button:
+                launchNewGame();
+                break;
+            case R.id.undo:
+                //todo
+                break;
+        }
+    }
+
+    private void setDifficultyLevel(String levelString) {
+        difficultyLevel = DifficultyLevel.getLevelForString(levelString);
+        levelSelect.setText(levelString);
+
+        SharedPrefsHelper.setDifficultyLevel(this, difficultyLevel);
+    }
+
+    private void launchNewGame() {
+        gameDurationSeconds = 0;
+        setTimeToClock();
         board.initializeBoard(difficultyLevel.getLevel());
+
+        if(timerTask != null) {
+            timerTask.cancel();
+        }
+        timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                clockUpdateHandler.sendEmptyMessage(0);
+            }
+        };
+        timer.scheduleAtFixedRate(timerTask, 1000, 1000);
+    }
+
+    private void setTimeToClock() {
+        int minutes = gameDurationSeconds / 60;
+        int seconds = gameDurationSeconds % 60;
+        clock.setText(String.format(Locale.US, "%02d:%02d", minutes, seconds));
     }
 
     @Override
@@ -168,6 +235,9 @@ public class MainActivityParent extends ActionBarActivity implements View.OnClic
 
     @Override
     public void onComplete() {
+        if(timerTask != null) {
+            timerTask.cancel();
+        }
         Toast.makeText(this, "Good Job", Toast.LENGTH_SHORT).show();
     }
 
@@ -190,4 +260,20 @@ public class MainActivityParent extends ActionBarActivity implements View.OnClic
     public void onMarkCell(boolean isMarked, int cellIndex) {
         board.markCellAsPivot(isMarked, cellIndex);
     }
+
+    static class ClockUpdateHandler extends Handler {
+        private final WeakReference<MainActivityParent> activityRef;
+
+        ClockUpdateHandler(MainActivityParent activity) {
+            activityRef = new WeakReference<MainActivityParent>(activity);
+        }
+
+        @Override
+        public void handleMessage(Message message) {
+            if(activityRef.get() != null) {
+                activityRef.get().gameDurationSeconds++;
+                activityRef.get().setTimeToClock();
+            }
+        }
+    };
 }

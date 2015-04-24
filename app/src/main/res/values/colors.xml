@@ -18,13 +18,16 @@
     <color name="selector_enabled_back">#FFFFFFFF</color>
     <color name="selector_pressed_back">#FFDFAFFF</color>
 
-    <color name="button_disabled_back">#FFDDDDDD</color>
-    <color name="button_enabled_back">#ff9bff9f</color>
-    <color name="button_pressed_back">#ff2aff20</color>
+    <color name="button_disabled_back">#FFAAAAAA</color>
+    <color name="button_pressed_back">#ffb1c8ff</color>
+    <color name="button_enabled_back">#ff4aa3ff</color>
 
-    <color name="dialog_frag_back">#ffffcee7</color>
+    <color name="dialog_frag_back">#ffffe280</color>
 
     <color name="activated_not_pressed">#FFFFDEF7</color>
     <color name="activated_pressed">#FFFFBED7</color>
     <color name="unactivated_not_pressed">#FFFFFFFF</color>
+
+    <color name="clock_stroke">#FFCCCCCC</color>
+    <color name="clock_back">#ff070e87</color>
 </resources>

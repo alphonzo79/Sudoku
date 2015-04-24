@@ -1,21 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/clock"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginBottom="7dp"
+        android:text="@string/clock_default"
+        android:background="@drawable/clock_background"
+        android:gravity="center"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:textSize="20sp" />
+
+    <ImageView
+        android:id="@+id/undo"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="7dp"
+        android:padding="10dp"
+        android:contentDescription="@string/none"
+        android:src="@drawable/undo"
+        android:background="@drawable/button_back"
+        android:scaleType="center"
+        />
+
+    <TextView
+        android:id="@+id/new_game_button"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_toLeftOf="@id/undo"
+        android:layout_marginRight="7dp"
+        android:layout_marginBottom="7dp"
+        android:gravity="center"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:background="@drawable/button_back"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:text="@string/new_game" />
+
+    <TextView
+        android:id="@+id/level_button"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_toLeftOf="@id/new_game_button"
+        android:layout_toRightOf="@id/clock"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:layout_marginBottom="7dp"
+        android:gravity="center"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:background="@drawable/button_back"
+        android:textStyle="bold"
+        android:textColor="@android:color/white" />
 
     <rowley.sudoku.view.Board
         android:id="@+id/board"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/temp_button"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/board"
-        android:layout_marginTop="25dp"
-        android:text="Initialize The Board"
-        />
+        android:layout_below="@id/clock"/>
 
 </merge>
