@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Sudoku</string>
+    <string name="app_name">Yet Another Sudoku</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_guard_against_bad">Protect Me Against Bad moves</string>
