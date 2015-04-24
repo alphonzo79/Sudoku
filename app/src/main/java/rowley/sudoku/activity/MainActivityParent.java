@@ -18,7 +18,7 @@ import rowley.sudoku.view.AlertMessageContents;
 import rowley.sudoku.view.Board;
 
 
-public class MainActivity extends ActionBarActivity implements View.OnClickListener, Board.BoardListener,
+public class MainActivityParent extends ActionBarActivity implements View.OnClickListener, Board.BoardListener,
         SetCellDialogFragment.SetCellFragListener, MarkCellDialogFragment.MarkCellFragListener {
     private Board board;
     private boolean warnOnBadEntry = false;
@@ -109,7 +109,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                 public void onClick(DialogInterface dialog, int which) {
                     if(contents.isDontShowChecked()) {
                         hasDismissedRegular = true;
-                        SharedPrefsHelper.setHasDismissedRegularClickEducation(MainActivity.this);
+                        SharedPrefsHelper.setHasDismissedRegularClickEducation(MainActivityParent.this);
                     }
                     dialog.cancel();
                 }
@@ -145,7 +145,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                 public void onClick(DialogInterface dialog, int which) {
                     if(contents.isDontShowChecked()) {
                         hasDismissedLong = true;
-                        SharedPrefsHelper.setHasDismissedLongClickEducation(MainActivity.this);
+                        SharedPrefsHelper.setHasDismissedLongClickEducation(MainActivityParent.this);
                     }
                     dialog.cancel();
                 }
