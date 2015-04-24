@@ -14,6 +14,7 @@ import rowley.sudoku.fragment.MarkCellDialogFragment;
 import rowley.sudoku.fragment.SetCellDialogFragment;
 import rowley.sudoku.util.DifficultyLevel;
 import rowley.sudoku.util.SharedPrefsHelper;
+import rowley.sudoku.view.AlertMessageContents;
 import rowley.sudoku.view.Board;
 
 
@@ -100,16 +101,16 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
             final boolean[] finalPossibilities = possibilities;
             final int finalCellIndex = cellIndex;
 
-            new AlertDialog.Builder(this).setMessage(R.string.regular_education).setCancelable(true).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            final AlertMessageContents contents = new AlertMessageContents(this);
+            contents.setMessage(getString(R.string.regular_education));
+
+            new AlertDialog.Builder(this).setView(contents).setCancelable(true).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
-            }).setNegativeButton(R.string.dont_show_again, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    hasDismissedRegular = true;
-                    SharedPrefsHelper.setHasDismissedRegularClickEducation(MainActivity.this);
+                    if(contents.isDontShowChecked()) {
+                        hasDismissedRegular = true;
+                        SharedPrefsHelper.setHasDismissedRegularClickEducation(MainActivity.this);
+                    }
                     dialog.cancel();
                 }
             }).setOnCancelListener(new DialogInterface.OnCancelListener() {
@@ -136,16 +137,16 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
             final boolean finalIsMarked = isMarked;
             final int finalCellIndex = cellIndex;
 
-            new AlertDialog.Builder(this).setMessage(R.string.long_education).setCancelable(true).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            final AlertMessageContents contents = new AlertMessageContents(this);
+            contents.setMessage(getString(R.string.long_education));
+
+            new AlertDialog.Builder(this).setView(contents).setCancelable(true).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
-            }).setNegativeButton(R.string.dont_show_again, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    hasDismissedLong = true;
-                    SharedPrefsHelper.setHasDismissedLongClickEducation(MainActivity.this);
+                    if(contents.isDontShowChecked()) {
+                        hasDismissedLong = true;
+                        SharedPrefsHelper.setHasDismissedLongClickEducation(MainActivity.this);
+                    }
                     dialog.cancel();
                 }
             }).setOnCancelListener(new DialogInterface.OnCancelListener() {

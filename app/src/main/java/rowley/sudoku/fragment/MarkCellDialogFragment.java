@@ -127,6 +127,7 @@ public class MarkCellDialogFragment extends DialogFragment implements View.OnCli
             case R.id.mark_button:
                 isMarked = !isMarked;
                 setMarkButtonText();
+                ((MarkCellFragListener)getActivity()).onSaveNotes(markedPossibilities, getArguments().getInt(CELL_INDEX));
                 ((MarkCellFragListener)getActivity()).onMarkCell(isMarked, getArguments().getInt(CELL_INDEX));
                 dismiss();
                 break;
