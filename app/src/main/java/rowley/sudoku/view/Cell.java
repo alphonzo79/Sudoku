@@ -8,15 +8,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import rowley.sudoku.R;
+import rowley.sudoku.model.CellState;
 
 /**
  * Created by joe on 4/19/15.
  */
 public class Cell extends FrameLayout {
-    private boolean[] possibilities = new boolean[9];
-    private boolean[] markedGuesses = new boolean[9];
-    private int chosenNumber;
-    private boolean isMarked = false;
 
     private TextView chosenNumDisplay;
     private TextView guessesDisplay;
@@ -45,108 +42,42 @@ public class Cell extends FrameLayout {
         guessesDisplay = (TextView)findViewById(R.id.noted_guesses_view);
     }
 
-    public void resetCell() {
-        for(int i = 0; i < possibilities.length; i++) {
-            possibilities[i] = true;
-        }
+    public void setCellState(CellState state) {
+        if(state.getOneBasedChosenNumber() != 0) {
+            chosenNumDisplay.setText(String.valueOf(state.getOneBasedChosenNumber()));
+            chosenNumDisplay.setVisibility(VISIBLE);
+            guessesDisplay.setText("");
+                guessesDisplay.setVisibility(GONE);
+        } else {
+            chosenNumDisplay.setText("");
+            chosenNumDisplay.setVisibility(GONE);
 
-        for(int i = 0; i < markedGuesses.length; i++) {
-            markedGuesses[i] = false;
-        }
+            //Do we have guesses to show?
+            StringBuilder builder = new StringBuilder();
+            for(int i = 0; i < state.getMarkedGuesses().length; i++) {
+                if(state.getMarkedGuesses()[i]) {
+                    if (builder.length() == 5 || builder.length() == 11) {
+                        builder.append("\n");
+                    } else if (builder.length() > 0) {
+                        builder.append(" ");
+                    }
+                    builder.append(i + 1);
+                }
+            }
 
-        chosenNumber = 0;
-        chosenNumDisplay.setText("");
-        chosenNumDisplay.setVisibility(GONE);
-
-        guessesDisplay.setText("");
-        guessesDisplay.setVisibility(GONE);
-
-        getBackground().setLevel(0);
-        isMarked = false;
-    }
-
-    public void setChosenNumber(int oneBasedChosenNumber, boolean display) {
-        if(oneBasedChosenNumber > 0 && oneBasedChosenNumber <= possibilities.length) {
-            this.chosenNumber = oneBasedChosenNumber;
-            chosenNumDisplay.setText(String.valueOf(chosenNumber));
-            if (display) {
-                chosenNumDisplay.setVisibility(VISIBLE);
+            if(builder.length() > 0) {
+                guessesDisplay.setText(builder.toString());
+                guessesDisplay.setVisibility(VISIBLE);
+                chosenNumDisplay.setVisibility(GONE);
+            } else {
+                guessesDisplay.setText("");
                 guessesDisplay.setVisibility(GONE);
             }
-            possibilities[oneBasedChosenNumber - 1] = false;
-        }
-    }
 
-    public int getOneBasedChosenNumber() {
-        return chosenNumber;
-    }
-
-    public int removeOneBasedChosenNumber() {
-        int result = chosenNumber;
-        chosenNumber = 0;
-        chosenNumDisplay.setText("");
-        chosenNumDisplay.setVisibility(GONE);
-        if(result > 0) {
-            possibilities[result - 1] = true;
+            builder = null;
         }
 
-        return result;
-    }
-
-    public void setMarkedGuesses(boolean[] markedGuesses) {
-        this.markedGuesses = markedGuesses;
-
-        StringBuilder builder = new StringBuilder();
-        for(int i = 0; i < markedGuesses.length; i++) {
-            if(markedGuesses[i]) {
-                if (builder.length() == 5 || builder.length() == 11) {
-                    builder.append("\n");
-                } else if (builder.length() > 0) {
-                    builder.append(" ");
-                }
-                builder.append(i + 1);
-            }
-        }
-        guessesDisplay.setText(builder.toString());
-        if(builder.length() > 0) {
-            guessesDisplay.setVisibility(VISIBLE);
-            chosenNumDisplay.setVisibility(GONE);
-        } else {
-            guessesDisplay.setVisibility(GONE);
-        }
-
-        builder = null;
-    }
-
-    public boolean[] getMarkedGuesses() {
-        return markedGuesses;
-    }
-
-    public boolean[] getPossibilities() {
-        return possibilities;
-    }
-
-    public void toggleMarked(boolean isMarked) {
-        this.isMarked = isMarked;
-        getBackground().setLevel(this.isMarked ? 1 : 0);
-    }
-
-    public boolean getIsMarked() {
-        return isMarked;
-    }
-
-    public void addPossibility(int zeroBasedPossibility) {
-        possibilities[zeroBasedPossibility] = true;
-    }
-
-    public void removePossibility(int zeroBasedPossibility) {
-        possibilities[zeroBasedPossibility] = false;
-    }
-
-    public void finalizeCell() {
-        if(chosenNumber > 0) {
-            chosenNumDisplay.setVisibility(VISIBLE);
-        }
+        getBackground().setLevel(state.isMarked() ? 1 : 0);
     }
 
     @Override
