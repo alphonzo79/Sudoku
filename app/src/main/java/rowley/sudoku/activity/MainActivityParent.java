@@ -9,6 +9,7 @@ import android.os.Message;
 import android.os.SystemClock;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -52,8 +53,13 @@ public class MainActivityParent extends ActionBarActivity implements View.OnClic
     private volatile int gameDurationSeconds = 0;
     private ClockUpdateHandler clockUpdateHandler;
 
+    private boolean gameIsRunning = false;
+
     private Observable<Void> initializeBoardObservable;
     private Action1<Void> initialzeBoardOnNext;
+    private Observable<Pair<Integer, Integer>> getHintObservable;
+    private Action1<Pair<Integer, Integer>> getHintOnNext;
+    private Observable<Boolean> flashHintLocationObservable;
     private Action1<Throwable> onError;
     private AlertDialog progressDialog;
 
@@ -106,6 +112,37 @@ public class MainActivityParent extends ActionBarActivity implements View.OnClic
             }
         };
 
+        getHintObservable = Observable.create(new Observable.OnSubscribe<Pair<Integer, Integer>>() {
+            @Override
+            public void call(Subscriber<? super Pair<Integer, Integer>> subscriber) {
+                Pair<Integer, Integer> hint = board.getHint();
+                //Just in case it was too fast and the progress dialog only flashes
+                //Make it look like it's working hard
+                SystemClock.sleep(500);
+                subscriber.onNext(hint);
+            }
+        });
+
+        getHintOnNext = new Action1<Pair<Integer, Integer>>() {
+            @Override
+            public void call(Pair<Integer, Integer> hint) {
+                if(progressDialog != null && progressDialog.isShowing()) {
+                    progressDialog.dismiss();
+                }
+                if(hint != null && hint.first >= 0 && hint.second > 0) {
+                    setHintToCell(hint.first, hint.second);
+                } else {
+                    new AlertDialog.Builder(MainActivityParent.this).setCancelable(true).setMessage(R.string.no_hint_found)
+                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            }).show();
+                }
+            }
+        };
+
         onError = new Action1<Throwable>() {
             @Override
             public void call(Throwable throwable) {
@@ -125,6 +162,19 @@ public class MainActivityParent extends ActionBarActivity implements View.OnClic
         super.onResume();
     }
 
+    @Override
+    protected void onDestroy() {
+        if(initializeBoardObservable != null) {
+            initializeBoardObservable.unsubscribeOn(Schedulers.immediate());
+        }
+        if(getHintObservable != null) {
+            getHintObservable.unsubscribeOn(Schedulers.immediate());
+        }
+        if(flashHintLocationObservable != null) {
+            flashHintLocationObservable.unsubscribeOn(Schedulers.immediate());
+        }
+        super.onDestroy();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -160,6 +210,9 @@ public class MainActivityParent extends ActionBarActivity implements View.OnClic
                 warnOnBadEntry = false;
                 SharedPrefsHelper.setProtectAgainstBadMoves(this, warnOnBadEntry);
                 board.setWarnOnBadEntry(warnOnBadEntry);
+                return true;
+            case R.id.get_hint:
+                getHint();
                 return true;
         }
 
@@ -222,12 +275,55 @@ public class MainActivityParent extends ActionBarActivity implements View.OnClic
             }
         };
         timer.scheduleAtFixedRate(timerTask, 1000, 1000);
+
+        gameIsRunning = true;
     }
 
     private void setTimeToClock() {
         int minutes = gameDurationSeconds / 60;
         int seconds = gameDurationSeconds % 60;
         clock.setText(String.format(Locale.US, "%02d:%02d", minutes, seconds));
+    }
+
+    private void getHint() {
+        if(gameIsRunning) {
+            progressDialog.setMessage(getString(R.string.looking_for_hint));
+            progressDialog.show();
+
+            AppObservable.bindActivity(this, getHintObservable).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(getHintOnNext, onError);
+        } else {
+            Toast.makeText(this, R.string.start_game_first, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void setHintToCell(final int cellIndex, int foundOneBasedValue) {
+        board.setNumToCell(foundOneBasedValue, cellIndex);
+        //Let us return it to its original state
+        final boolean isMarked = board.isCellMarkedAsPivot(cellIndex);
+        board.markCellAsPivot(!isMarked, cellIndex);
+
+        flashHintLocationObservable = Observable.create(new Observable.OnSubscribe<Boolean>() {
+            @Override
+            public void call(Subscriber<? super Boolean> subscriber) {
+                SystemClock.sleep(400);
+                subscriber.onNext(isMarked);
+                SystemClock.sleep(400);
+                subscriber.onNext(!isMarked);
+                SystemClock.sleep(400);
+                subscriber.onNext(isMarked);
+                SystemClock.sleep(400);
+                subscriber.onNext(!isMarked);
+                SystemClock.sleep(400);
+                subscriber.onNext(isMarked);
+            }
+        });
+
+        AppObservable.bindActivity(this, flashHintLocationObservable).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Boolean>() {
+            @Override
+            public void call(Boolean aBoolean) {
+                board.markCellAsPivot(aBoolean, cellIndex);;
+            }
+        }, onError);
     }
 
     @Override
@@ -306,6 +402,9 @@ public class MainActivityParent extends ActionBarActivity implements View.OnClic
         if(timerTask != null) {
             timerTask.cancel();
         }
+
+        gameIsRunning = false;
+
         Toast.makeText(this, "Good Job", Toast.LENGTH_SHORT).show();
     }
 

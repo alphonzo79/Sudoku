@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -81,7 +82,7 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
             state.resetState();
         }
 
-        if (!findValueForCellAndAllOthers(0)) {
+        if (!findValueForCellAndAllOthers(0, true)) {
             Toast.makeText(getContext(), R.string.failed_to_build_board, Toast.LENGTH_SHORT).show();
         }
         for (int i = 0; i < activeCellStates.length; i++) {
@@ -106,28 +107,33 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
         }
     }
 
-    private boolean findValueForCellAndAllOthers(int targetCell) {
+    private boolean findValueForCellAndAllOthers(int targetCell, boolean retainValue) {
         if(targetCell > activeCellStates.length - 1) {
             return true;
+        }
+        if(activeCellStates[targetCell].getOneBasedChosenNumber() > 0) {
+            //We're running through looking for a hint and this will allow us to skip over cells
+            //that have already been set. Just move along to the next cell
+            return findValueForCellAndAllOthers(targetCell + 1, retainValue);
         }
 
         boolean result = false;
 
         int possibilitiesSize = activeCellStates[targetCell].getPossibilities().length;
         int index = rand.nextInt(possibilitiesSize);
-        for(int i = 0; i < possibilitiesSize && !result; i++, index++) {
-            if(index >= possibilitiesSize) {
+        for (int i = 0; i < possibilitiesSize && !result; i++, index++) {
+            if (index >= possibilitiesSize) {
                 index = 0;
             }
 
-            if(activeCellStates[targetCell].getPossibilities()[index]) {
+            if (activeCellStates[targetCell].getPossibilities()[index]) {
                 activeCellStates[targetCell].setOneBasedChosenNumber(index + 1);
                 Log.d("JAR", "Trying Value " + (index + 1) + " in cell " + targetCell);
-                if(removePossibilityFromCounterparts(index, targetCell)) {
-                    result = findValueForCellAndAllOthers(targetCell + 1);
+                if (removePossibilityFromCounterparts(index, targetCell)) {
+                    result = findValueForCellAndAllOthers(targetCell + 1, retainValue);
                 }
 
-                if(!result) {
+                if (!result || !retainValue) {
                     activeCellStates[targetCell].removeOneBasedChosenNumber();
                     addPossibilityToCounterparts(index, targetCell);
                 }
@@ -525,6 +531,11 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
         cells[cellIndex].setCellState(activeCellStates[cellIndex]);
     }
 
+
+    public boolean isCellMarkedAsPivot(int cellIndex) {
+        return activeCellStates[cellIndex].isMarked();
+    }
+
     public void setWarnOnBadEntry(boolean warnOnBadEntry) {
         this.warnOnBadEntry = warnOnBadEntry;
     }
@@ -544,6 +555,64 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
             ((BoardListener)getContext()).onShowMarkCellFrag(activeCellStates[index].getMarkedGuesses(), activeCellStates[index].isMarked(), index);
         }
         return true;
+    }
+
+    public Pair<Integer, Integer> getHint() {
+        Pair<Integer, Integer> result = null;
+
+        int attemptCount = 0;
+        boolean success = false;
+        int[] cellAndValue = new int[2];
+        while(!success && attemptCount < 100) {
+            cellAndValue = findPossibleHintForRandomCell();
+            if(cellAndValue[0] >= 0 && cellAndValue[1] > 0) {
+                activeCellStates[cellAndValue[0]].setOneBasedChosenNumber(cellAndValue[1]);
+                if (removePossibilityFromCounterparts(cellAndValue[1] - 1, cellAndValue[0])) {
+                    success = findValueForCellAndAllOthers(0, false);
+                }
+
+                activeCellStates[cellAndValue[0]].removeOneBasedChosenNumber();
+                addPossibilityToCounterparts(cellAndValue[1] - 1, cellAndValue[0]);
+            }
+
+            attemptCount++;
+        }
+
+
+        if(success) {
+            result = new Pair<Integer, Integer>(cellAndValue[0], cellAndValue[1]);
+        }
+
+        return result;
+    }
+
+    private int[] findPossibleHintForRandomCell() {
+        int[] result = new int[]{-1, 0};
+
+        int cellIndex = rand.nextInt(cells.length);
+        if(activeCellStates[cellIndex].getOneBasedChosenNumber() == 0) {
+            int possibilitiesSize = activeCellStates[cellIndex].getPossibilities().length;
+            int index = rand.nextInt(possibilitiesSize);
+            boolean validPossibilityFound = false;
+            for (int i = 0; i < possibilitiesSize && !validPossibilityFound; i++, index++) {
+                if (index >= possibilitiesSize) {
+                    index = 0;
+                }
+
+                if (activeCellStates[cellIndex].getPossibilities()[index]) {
+                    validPossibilityFound = true;
+                }
+            }
+
+            //We let it index one last time at the end of the last loop
+            //So we have a 1-based value for that possibility now
+            if(validPossibilityFound) {
+                result[0] = cellIndex;
+                result[1] = index;
+            }
+        }
+
+        return result;
     }
 
     public interface BoardListener {
