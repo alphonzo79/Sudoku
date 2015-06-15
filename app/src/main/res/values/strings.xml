@@ -5,7 +5,7 @@
     <string name="action_guard_against_bad">Protect Me Against Bad moves</string>
     <string name="action_allow_bad">Don\'t Protect Me Against Bad Moves</string>
 
-    <string name="preparing_board">Preparing Boar&#8230;</string>
+    <string name="preparing_board">Preparing Board&#8230;</string>
     <string name="failed_to_build_board">Failed to create a board. Try again?</string>
     <string name="ok">Ok</string>
     <string name="cancel">Cancel</string>
@@ -38,4 +38,6 @@
     <string name="none"></string>
 
     <string name="general_error">There was an unknown error. Please try again.</string>
+
+    <string name="choose_difficulty_level">Choose Difficulty Level.</string>
 </resources>

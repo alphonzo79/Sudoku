@@ -2,9 +2,9 @@ package rowley.sudoku.util;
 
 public enum DifficultyLevel {
     EASY("Easy", 1000000D),
-    MEDIUM("Medium", 10000000000D),
-    DIFFICULT("Difficult", 1000000000000000000D),
-    EXTREME("Extreme", 100000000000000000000000D);
+    MEDIUM("Medium", 100000000000D),
+    DIFFICULT("Difficult", 100000000000000000000D),
+    EXTREME("Extreme", 1000000000000000000000000000D);
 
     private DifficultyLevel(String displayString, double level) {
         this.display = displayString;
@@ -36,5 +36,9 @@ public enum DifficultyLevel {
         }
 
         return result;
+    }
+
+    public static String[] getDisplayStrings() {
+        return new String[]{EASY.getDisplayString(), MEDIUM.getDisplayString(), DIFFICULT.getDisplayString(), EXTREME.getDisplayString()};
     }
 }

@@ -500,6 +500,7 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
             }
             if(!validMove) {
                 activeCellStates[cellIndex].removeOneBasedChosenNumber();
+                cells[cellIndex].setCellState(activeCellStates[cellIndex]);
                 addPossibilityToCounterparts(oneBasedChosenNumber - 1, cellIndex);
 
                 Toast.makeText(getContext(), R.string.bad_move_warning, Toast.LENGTH_LONG).show();

@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.os.SystemClock;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -88,6 +89,9 @@ public class MainActivityParent extends ActionBarActivity implements View.OnClic
             @Override
             public void call(Subscriber<? super Void> subscriber) {
                 board.initializeBoard(difficultyLevel.getLevel());
+                //Just in case it was too fast and the progress dialog only flashes
+                //Make it look like it's working hard
+                SystemClock.sleep(500);
                 subscriber.onNext(null);
             }
         });
@@ -166,7 +170,7 @@ public class MainActivityParent extends ActionBarActivity implements View.OnClic
     public void onClick(View v) {
         switch(v.getId()) {
             case R.id.level_button:
-                //todo
+                showLevelSelector();
                 break;
             case R.id.new_game_button:
                 launchNewGame();
@@ -175,6 +179,21 @@ public class MainActivityParent extends ActionBarActivity implements View.OnClic
                 //todo
                 break;
         }
+    }
+
+    private void showLevelSelector() {
+        final String[] levels = DifficultyLevel.getDisplayStrings();
+        new AlertDialog.Builder(this).setCancelable(true).setTitle(R.string.choose_difficulty_level)
+                .setSingleChoiceItems(levels, difficultyLevel.ordinal(), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        if(!levels[which].equals(difficultyLevel.getDisplayString())) {
+                            setDifficultyLevel(levels[which]);
+                            launchNewGame();
+                        }
+                    }
+                }).show();
     }
 
     private void setDifficultyLevel(String levelString) {
