@@ -1,5 +1,6 @@
 package rowley.sudoku.view;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -14,6 +15,9 @@ import java.util.Random;
 
 import rowley.sudoku.R;
 import rowley.sudoku.model.CellState;
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.app.AppObservable;
 
 /**
  * Created by joe on 4/19/15.
@@ -62,39 +66,44 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
         rand = new Random(System.currentTimeMillis());
     }
 
-    public void initializeBoard(final double targetComplexity) {
-        final AlertDialog progress = new AlertDialog.Builder(getContext())
-                .setMessage(R.string.preparing_board).setCancelable(false).show();
-
+    /**
+     * Synchronously reset all state tracking and create a valid board, then back out to the given level of complexity.<br />
+     * <b>This method runs synchronously. It is advised to call this method from a background thread. It does not do any work with UI elements. To finalize the board and display the results of this method, use {@link #finalizeBoard()}</b>
+     * @param targetComplexity The target level of complexity to which the board should be cleared, expressed in number of possible permutations (valid and non-valid)
+     */
+    public void initializeBoard(double targetComplexity) {
         moveIndex = 0;
-        for(int i = 0; i < moveRecord.length; i++) {
+        for (int i = 0; i < moveRecord.length; i++) {
             moveRecord[i] = -1;
         }
 
-        for(CellState state : activeCellStates) {
+        for (CellState state : activeCellStates) {
             state.resetState();
         }
 
-        if(!findValueForCellAndAllOthers(0)) {
+        if (!findValueForCellAndAllOthers(0)) {
             Toast.makeText(getContext(), R.string.failed_to_build_board, Toast.LENGTH_SHORT).show();
         }
-        for(int i = 0; i < activeCellStates.length; i++) {
+        for (int i = 0; i < activeCellStates.length; i++) {
             winningBoard[i] = activeCellStates[i].getOneBasedChosenNumber();
         }
 
         boolean shouldContinue = true;
-        while(shouldContinue) {
+        while (shouldContinue) {
             int cellIndex = rand.nextInt(cells.length);
-            clearCell(cellIndex);
-            cells[cellIndex].setEnabled(true);
+            clearCellState(cellIndex);
             shouldContinue = estimateComplexity() < targetComplexity;
         }
+    }
 
+    /**
+     * Display the results of {@link #initializeBoard(double)}. This method is meant to run on the UI thread
+     */
+    public void finalizeBoard() {
         for(int i = 0; i < cells.length; i++) {
             cells[i].setCellState(activeCellStates[i]);
+            cells[i].setEnabled(activeCellStates[i].getOneBasedChosenNumber() == 0);
         }
-
-        progress.dismiss();
     }
 
     private boolean findValueForCellAndAllOthers(int targetCell) {
@@ -463,12 +472,16 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
         return result;
     }
 
-    public void clearCell(int cellIndex) {
+    private void clearCellState(int cellIndex) {
         int retrieved = activeCellStates[cellIndex].removeOneBasedChosenNumber();
         if(retrieved > 0) {
             addPossibilityToCounterparts(retrieved - 1, cellIndex);
             Log.d("JAR", "Found complexity of " + estimateComplexity());
         }
+    }
+
+    public void clearCell(int cellIndex) {
+        clearCellState(cellIndex);
         cells[cellIndex].setCellState(activeCellStates[cellIndex]);
     }
 

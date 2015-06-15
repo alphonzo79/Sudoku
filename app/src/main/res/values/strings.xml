@@ -36,4 +36,6 @@
     <string name="clock_default">00:00</string>
 
     <string name="none"></string>
+
+    <string name="general_error">There was an unknown error. Please try again.</string>
 </resources>

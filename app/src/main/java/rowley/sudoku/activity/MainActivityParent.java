@@ -1,6 +1,7 @@
 package rowley.sudoku.activity;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Looper;
@@ -25,6 +26,12 @@ import rowley.sudoku.util.DifficultyLevel;
 import rowley.sudoku.util.SharedPrefsHelper;
 import rowley.sudoku.view.AlertMessageContents;
 import rowley.sudoku.view.Board;
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.app.AppObservable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 
 public class MainActivityParent extends ActionBarActivity implements View.OnClickListener, Board.BoardListener,
@@ -43,6 +50,11 @@ public class MainActivityParent extends ActionBarActivity implements View.OnClic
     private TimerTask timerTask;
     private volatile int gameDurationSeconds = 0;
     private ClockUpdateHandler clockUpdateHandler;
+
+    private Observable<Void> initializeBoardObservable;
+    private Action1<Void> initialzeBoardOnNext;
+    private Action1<Throwable> onError;
+    private AlertDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +81,39 @@ public class MainActivityParent extends ActionBarActivity implements View.OnClic
 
         String levelString = SharedPrefsHelper.getDifficultyLevelString(this);
         setDifficultyLevel(levelString);
+
+        progressDialog = new ProgressDialog.Builder(this).setCancelable(false).create();
+
+        initializeBoardObservable = Observable.create(new Observable.OnSubscribe<Void>() {
+            @Override
+            public void call(Subscriber<? super Void> subscriber) {
+                board.initializeBoard(difficultyLevel.getLevel());
+                subscriber.onNext(null);
+            }
+        });
+
+        initialzeBoardOnNext = new Action1<Void>() {
+            @Override
+            public void call(Void aVoid) {
+                board.finalizeBoard();
+                if(progressDialog != null && progressDialog.isShowing()) {
+                    progressDialog.dismiss();
+                }
+            }
+        };
+
+        onError = new Action1<Throwable>() {
+            @Override
+            public void call(Throwable throwable) {
+                if(throwable != null) {
+                    throwable.printStackTrace();
+                }
+                Toast.makeText(MainActivityParent.this, R.string.general_error, Toast.LENGTH_SHORT).show();
+                if(progressDialog != null && progressDialog.isShowing()) {
+                    progressDialog.dismiss();
+                }
+            }
+        };
     }
 
     @Override
@@ -142,7 +187,11 @@ public class MainActivityParent extends ActionBarActivity implements View.OnClic
     private void launchNewGame() {
         gameDurationSeconds = 0;
         setTimeToClock();
-        board.initializeBoard(difficultyLevel.getLevel());
+
+        progressDialog.setMessage(getString(R.string.preparing_board));
+        progressDialog.show();
+
+        AppObservable.bindActivity(this, initializeBoardObservable).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(initialzeBoardOnNext, onError);
 
         if(timerTask != null) {
             timerTask.cancel();
