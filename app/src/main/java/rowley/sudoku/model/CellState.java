@@ -113,4 +113,15 @@ public class CellState implements Parcelable {
         oneBasedChosenNumber = 0;
         isMarked = false;
     }
+
+    public void duplicateState(CellState target) {
+        for(int i = 0; i < possibilities.length; i++) {
+            target.getPossibilities()[i] = possibilities[i];
+        }
+        for(int i = 0; i < markedGuesses.length; i++) {
+            target.getMarkedGuesses()[i] = markedGuesses[i];
+        }
+        target.oneBasedChosenNumber = oneBasedChosenNumber;
+        target.setIsMarked(isMarked);
+    }
 }

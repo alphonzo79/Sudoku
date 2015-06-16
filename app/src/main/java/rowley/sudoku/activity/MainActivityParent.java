@@ -300,7 +300,7 @@ public class MainActivityParent extends ActionBarActivity implements View.OnClic
         board.setNumToCell(foundOneBasedValue, cellIndex);
         //Let us return it to its original state
         final boolean isMarked = board.isCellMarkedAsPivot(cellIndex);
-        board.markCellAsPivot(!isMarked, cellIndex);
+        board.markCellAsPivot(!isMarked, cellIndex, false);
 
         flashHintLocationObservable = Observable.create(new Observable.OnSubscribe<Boolean>() {
             @Override
@@ -321,7 +321,7 @@ public class MainActivityParent extends ActionBarActivity implements View.OnClic
         AppObservable.bindActivity(this, flashHintLocationObservable).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Boolean>() {
             @Override
             public void call(Boolean aBoolean) {
-                board.markCellAsPivot(aBoolean, cellIndex);;
+                board.markCellAsPivot(aBoolean, cellIndex, false);;
             }
         }, onError);
     }
@@ -425,7 +425,7 @@ public class MainActivityParent extends ActionBarActivity implements View.OnClic
 
     @Override
     public void onMarkCell(boolean isMarked, int cellIndex) {
-        board.markCellAsPivot(isMarked, cellIndex);
+        board.markCellAsPivot(isMarked, cellIndex, true);
     }
 
     static class ClockUpdateHandler extends Handler {

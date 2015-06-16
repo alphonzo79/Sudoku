@@ -16,6 +16,7 @@ import java.util.Random;
 
 import rowley.sudoku.R;
 import rowley.sudoku.model.CellState;
+import rowley.sudoku.model.MoveRecord;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.app.AppObservable;
@@ -24,11 +25,15 @@ import rx.android.app.AppObservable;
  * Created by joe on 4/19/15.
  */
 public class Board extends LinearLayout implements View.OnClickListener, View.OnLongClickListener {
-    private Cell[] cells = new Cell[81];
-    private CellState[] activeCellStates = new CellState[81];
-    private int[] winningBoard = new int[81];
-    private int moveIndex = 0;
-    private int[] moveRecord = new int[81];
+    private final int BOARD_SIZE = 81;
+
+    private Cell[] cells;
+    private CellState[] activeCellStates;
+    private int[] winningBoard;
+    private int moveIndex;
+    private MoveRecord[] moveRecord;
+
+    private CellState cellStateTempHolder;
 
     private Random rand;
 
@@ -53,6 +58,14 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
         inflate(context, R.layout.view_board, this);
 
         if(!isInEditMode()) {
+            cells = new Cell[BOARD_SIZE];
+            activeCellStates = new CellState[BOARD_SIZE];
+            winningBoard = new int[BOARD_SIZE];
+            moveIndex = 0;
+            //start big to avoid resizing if we can.
+            // The data is simple enough that this shouldn't cost us too much in memory footprint.
+            moveRecord = new MoveRecord[BOARD_SIZE * 3];
+
             for (int i = 0; i < cells.length; i++) {
                 Cell cell = (Cell) findViewWithTag(String.valueOf(i));
                 cell.setOnClickListener(this);
@@ -62,9 +75,9 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
 
                 activeCellStates[i] = new CellState();
             }
-        }
 
-        rand = new Random(System.currentTimeMillis());
+            rand = new Random(System.currentTimeMillis());
+        }
     }
 
     /**
@@ -75,7 +88,8 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
     public void initializeBoard(double targetComplexity) {
         moveIndex = 0;
         for (int i = 0; i < moveRecord.length; i++) {
-            moveRecord[i] = -1;
+            moveRecord[i].setCellIndex(-1);
+            moveRecord[i].getPreviousState().resetState();
         }
 
         for (CellState state : activeCellStates) {
@@ -487,14 +501,25 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
     }
 
     public void clearCell(int cellIndex) {
+        clearCell(cellIndex, true);
+    }
+
+    private void clearCell(int cellIndex, boolean addToMoveRecord) {
+        if(addToMoveRecord) {
+            activeCellStates[cellIndex].duplicateState(cellStateTempHolder);
+            addToMoveRecord(cellIndex, MoveRecord.MoveType.CLEAR, cellStateTempHolder);
+        }
         clearCellState(cellIndex);
         cells[cellIndex].setCellState(activeCellStates[cellIndex]);
     }
 
     public void setNumToCell(int oneBasedChosenNumber, int cellIndex) {
+        activeCellStates[cellIndex].duplicateState(cellStateTempHolder);
+        addToMoveRecord(cellIndex, MoveRecord.MoveType.SET, cellStateTempHolder);
+
         int alreadySet = activeCellStates[cellIndex].getOneBasedChosenNumber();
         if(alreadySet != 0) {
-            clearCell(cellIndex);
+            clearCell(cellIndex, false);
         }
 
         activeCellStates[cellIndex].setOneBasedChosenNumber(oneBasedChosenNumber);
@@ -505,9 +530,7 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
                 validMove = !isPossibilitySetAsChosenInCounterpart(oneBasedChosenNumber - 1, cellIndex);
             }
             if(!validMove) {
-                activeCellStates[cellIndex].removeOneBasedChosenNumber();
-                cells[cellIndex].setCellState(activeCellStates[cellIndex]);
-                addPossibilityToCounterparts(oneBasedChosenNumber - 1, cellIndex);
+                undo();
 
                 Toast.makeText(getContext(), R.string.bad_move_warning, Toast.LENGTH_LONG).show();
             }
@@ -522,11 +545,17 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
     }
 
     public void setMarksToCell(boolean[] markedPossibilities, int cellIndex) {
+        activeCellStates[cellIndex].duplicateState(cellStateTempHolder);
+        addToMoveRecord(cellIndex, MoveRecord.MoveType.SET_GUESSES, cellStateTempHolder);
         activeCellStates[cellIndex].setMarkedGuesses(markedPossibilities);
         cells[cellIndex].setCellState(activeCellStates[cellIndex]);
     }
 
-    public void markCellAsPivot(boolean isMarked, int cellIndex) {
+    public void markCellAsPivot(boolean isMarked, int cellIndex, boolean addToMoveRecord) {
+        if(addToMoveRecord) {
+            activeCellStates[cellIndex].duplicateState(cellStateTempHolder);
+            addToMoveRecord(cellIndex, MoveRecord.MoveType.MARK, cellStateTempHolder);
+        }
         activeCellStates[cellIndex].setIsMarked(isMarked);
         cells[cellIndex].setCellState(activeCellStates[cellIndex]);
     }
@@ -613,6 +642,52 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
         }
 
         return result;
+    }
+
+    private void addToMoveRecord(int cellIndex, MoveRecord.MoveType moveType, CellState previousState) {
+        if(moveIndex >= moveRecord.length) {
+            MoveRecord[] largerArray = new MoveRecord[moveRecord.length + 81];
+            for(int i = 0; i < largerArray.length; i++) {
+                if(i < moveRecord.length) {
+                    largerArray[i] = moveRecord[i];
+                } else {
+                    largerArray[i] = new MoveRecord();
+                }
+            }
+            moveRecord = largerArray;
+        }
+
+        moveRecord[moveIndex].setCellIndex(cellIndex);
+        moveRecord[moveIndex].setMoveType(moveType);
+        previousState.duplicateState(moveRecord[moveIndex].getPreviousState());
+
+        moveIndex++;
+    }
+
+    public boolean undo() {
+        boolean handled = false;
+
+        if(moveIndex > 0) {
+            moveIndex--;
+
+            int cellIndex = moveRecord[moveIndex].getCellIndex();
+            moveRecord[moveIndex].getPreviousState().duplicateState(activeCellStates[cellIndex]);
+            cells[cellIndex].setCellState(activeCellStates[cellIndex]);
+
+            MoveRecord.MoveType moveType = moveRecord[moveIndex].getMoveType();
+            if(moveType == MoveRecord.MoveType.SET) {
+                //todo
+            } else if(moveType == MoveRecord.MoveType.CLEAR) {
+                //todo
+            }
+
+            moveRecord[moveIndex].setCellIndex(-1);
+            moveRecord[moveIndex].getPreviousState().resetState();
+
+            handled = true;
+        }
+
+        return handled;
     }
 
     public interface BoardListener {
