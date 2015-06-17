@@ -61,7 +61,9 @@ public class CellState implements Parcelable {
     }
 
     public void setMarkedGuesses(boolean[] markedGuesses) {
-        this.markedGuesses = markedGuesses;
+        for(int i = 0; i < markedGuesses.length; i++) {
+            this.markedGuesses[i] = markedGuesses[i];
+        }
     }
 
     public void addPossibility(int zeroBasedPossibility) {
@@ -116,10 +118,10 @@ public class CellState implements Parcelable {
 
     public void duplicateState(CellState target) {
         for(int i = 0; i < possibilities.length; i++) {
-            target.getPossibilities()[i] = possibilities[i];
+            target.possibilities[i] = possibilities[i];
         }
         for(int i = 0; i < markedGuesses.length; i++) {
-            target.getMarkedGuesses()[i] = markedGuesses[i];
+            target.markedGuesses[i] = markedGuesses[i];
         }
         target.oneBasedChosenNumber = oneBasedChosenNumber;
         target.setIsMarked(isMarked);

@@ -44,4 +44,6 @@
     <string name="general_error">There was an unknown error. Please try again.</string>
 
     <string name="choose_difficulty_level">Choose Difficulty Level.</string>
+
+    <string name="nothing_to_undo">There are no moves to undo.</string>
 </resources>

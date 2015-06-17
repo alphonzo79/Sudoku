@@ -34,6 +34,7 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
     private MoveRecord[] moveRecord;
 
     private CellState cellStateTempHolder;
+    private boolean[] markedGuessesTransferArray;
 
     private Random rand;
 
@@ -65,6 +66,10 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
             //start big to avoid resizing if we can.
             // The data is simple enough that this shouldn't cost us too much in memory footprint.
             moveRecord = new MoveRecord[BOARD_SIZE * 3];
+            for(int i = 0; i < moveRecord.length; i++) {
+                moveRecord[i] = new MoveRecord();
+            }
+            cellStateTempHolder = new CellState();
 
             for (int i = 0; i < cells.length; i++) {
                 Cell cell = (Cell) findViewWithTag(String.valueOf(i));
@@ -581,7 +586,13 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
     public boolean onLongClick(View v) {
         if(getContext() instanceof BoardListener) {
             int index = Integer.parseInt((String)v.getTag());
-            ((BoardListener)getContext()).onShowMarkCellFrag(activeCellStates[index].getMarkedGuesses(), activeCellStates[index].isMarked(), index);
+            if(markedGuessesTransferArray == null) {
+                markedGuessesTransferArray = new boolean[activeCellStates[index].getMarkedGuesses().length];
+            }
+            for(int i = 0; i < markedGuessesTransferArray.length; i++) {
+                markedGuessesTransferArray[i] = activeCellStates[index].getMarkedGuesses()[i];
+            }
+            ((BoardListener)getContext()).onShowMarkCellFrag(markedGuessesTransferArray, activeCellStates[index].isMarked(), index);
         }
         return true;
     }
@@ -671,15 +682,23 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
             moveIndex--;
 
             int cellIndex = moveRecord[moveIndex].getCellIndex();
-            moveRecord[moveIndex].getPreviousState().duplicateState(activeCellStates[cellIndex]);
-            cells[cellIndex].setCellState(activeCellStates[cellIndex]);
 
             MoveRecord.MoveType moveType = moveRecord[moveIndex].getMoveType();
             if(moveType == MoveRecord.MoveType.SET) {
-                //todo
+                if(activeCellStates[moveIndex].getOneBasedChosenNumber() != 0) {
+                    clearCellState(cellIndex);
+                }
+                if(moveRecord[moveIndex].getPreviousState().getOneBasedChosenNumber() != 0) {
+                    removePossibilityFromCounterparts(moveRecord[moveIndex].getPreviousState().getOneBasedChosenNumber() - 1, cellIndex);
+                }
             } else if(moveType == MoveRecord.MoveType.CLEAR) {
-                //todo
+                if(moveRecord[moveIndex].getPreviousState().getOneBasedChosenNumber() != 0) {
+                    removePossibilityFromCounterparts(moveRecord[moveIndex].getPreviousState().getOneBasedChosenNumber() - 1, cellIndex);
+                }
             }
+
+            moveRecord[moveIndex].getPreviousState().duplicateState(activeCellStates[cellIndex]);
+            cells[cellIndex].setCellState(activeCellStates[cellIndex]);
 
             moveRecord[moveIndex].setCellIndex(-1);
             moveRecord[moveIndex].getPreviousState().resetState();

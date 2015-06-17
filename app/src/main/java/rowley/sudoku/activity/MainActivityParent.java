@@ -229,7 +229,9 @@ public class MainActivityParent extends ActionBarActivity implements View.OnClic
                 launchNewGame();
                 break;
             case R.id.undo:
-                //todo
+                if(!board.undo()) {
+                    Toast.makeText(this, R.string.nothing_to_undo, Toast.LENGTH_SHORT).show();
+                }
                 break;
         }
     }
