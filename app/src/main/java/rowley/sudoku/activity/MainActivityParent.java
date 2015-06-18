@@ -63,6 +63,9 @@ public class MainActivityParent extends ActionBarActivity implements View.OnClic
     private Action1<Throwable> onError;
     private AlertDialog progressDialog;
 
+    private final String BUNDLE_KEY_DURATION = "BUNDLE_KEY_DURATION";
+    private final String BUNDLE_KEY_GAME_RUNNING = "BUNDLE_KEY_GAME_RUNNING";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -155,11 +158,40 @@ public class MainActivityParent extends ActionBarActivity implements View.OnClic
                 }
             }
         };
+
+        if(savedInstanceState != null) {
+            if(savedInstanceState.containsKey(BUNDLE_KEY_GAME_RUNNING)) {
+                gameIsRunning = savedInstanceState.getBoolean(BUNDLE_KEY_GAME_RUNNING);
+                gameDurationSeconds = savedInstanceState.getInt(BUNDLE_KEY_DURATION);
+                board.restoreState(savedInstanceState);
+            }
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        if(gameIsRunning) {
+            board.saveState(savedInstanceState);
+            savedInstanceState.putInt(BUNDLE_KEY_DURATION, gameDurationSeconds);
+            savedInstanceState.putBoolean(BUNDLE_KEY_GAME_RUNNING, gameIsRunning);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(gameIsRunning) {
+            stopTimer();
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        if(gameIsRunning) {
+            startTimer();
+        }
     }
 
     @Override
@@ -229,8 +261,12 @@ public class MainActivityParent extends ActionBarActivity implements View.OnClic
                 launchNewGame();
                 break;
             case R.id.undo:
-                if(!board.undo()) {
-                    Toast.makeText(this, R.string.nothing_to_undo, Toast.LENGTH_SHORT).show();
+                if(gameIsRunning) {
+                    if (!board.undo()) {
+                        Toast.makeText(this, R.string.nothing_to_undo, Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(this, R.string.start_game_before_undo, Toast.LENGTH_SHORT).show();
                 }
                 break;
         }
@@ -267,9 +303,19 @@ public class MainActivityParent extends ActionBarActivity implements View.OnClic
 
         AppObservable.bindActivity(this, initializeBoardObservable).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(initialzeBoardOnNext, onError);
 
+        stopTimer();
+        startTimer();
+
+        gameIsRunning = true;
+    }
+
+    private void stopTimer() {
         if(timerTask != null) {
             timerTask.cancel();
         }
+    }
+
+    private void startTimer() {
         timerTask = new TimerTask() {
             @Override
             public void run() {
@@ -277,8 +323,6 @@ public class MainActivityParent extends ActionBarActivity implements View.OnClic
             }
         };
         timer.scheduleAtFixedRate(timerTask, 1000, 1000);
-
-        gameIsRunning = true;
     }
 
     private void setTimeToClock() {
@@ -401,9 +445,7 @@ public class MainActivityParent extends ActionBarActivity implements View.OnClic
 
     @Override
     public void onComplete() {
-        if(timerTask != null) {
-            timerTask.cancel();
-        }
+        stopTimer();
 
         gameIsRunning = false;
 

@@ -5,6 +5,8 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Pair;
@@ -39,6 +41,12 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
     private Random rand;
 
     private boolean warnOnBadEntry = false;
+
+    private final String BUNDLE_KEY_STATES = "BUNDLE_KEY_STATES";
+    private final String BUNDLE_KEY_WINNING_BOARD = "BUNDLE_KEY_WINNING_BOARD";
+    private final String BUNDLE_KEY_MOVE_INDEX = "BUNDLE_KEY_MOVE_INDEX";
+    private final String BUNDLE_KEY_MOVE_RECORD = "BUNDLE_KEY_MOVE_RECORD";
+    private final String BUNDLE_KEY_CELLS_ENABLED = "BUNDLE_KEY_CELLS_ENABLED";
 
     public Board(Context context) {
         super(context);
@@ -707,6 +715,36 @@ public class Board extends LinearLayout implements View.OnClickListener, View.On
         }
 
         return handled;
+    }
+
+    public void saveState(Bundle inState) {
+        inState.putParcelableArray(BUNDLE_KEY_STATES, activeCellStates);
+        inState.putIntArray(BUNDLE_KEY_WINNING_BOARD, winningBoard);
+        inState.putInt(BUNDLE_KEY_MOVE_INDEX, moveIndex);
+        inState.putParcelableArray(BUNDLE_KEY_MOVE_RECORD, moveRecord);
+
+        boolean[] cellsEnabled = new boolean[cells.length];
+        for(int i = 0; i < cells.length; i++) {
+            cellsEnabled[i] = cells[i].isEnabled();
+        }
+        inState.putBooleanArray(BUNDLE_KEY_CELLS_ENABLED, cellsEnabled);
+    }
+
+    public void restoreState(Bundle saveInstanceState) {
+        Parcelable[] parcelableArray = saveInstanceState.getParcelableArray(BUNDLE_KEY_STATES);
+        boolean[] cellsEnabled = saveInstanceState.getBooleanArray(BUNDLE_KEY_CELLS_ENABLED);
+        for(int i = 0; i < activeCellStates.length; i++) {
+            activeCellStates[i] = (CellState)parcelableArray[i];
+            cells[i].setCellState(activeCellStates[i]);
+            cells[i].setEnabled(cellsEnabled[i]);
+        }
+        winningBoard = saveInstanceState.getIntArray(BUNDLE_KEY_WINNING_BOARD);
+        moveIndex = saveInstanceState.getInt(BUNDLE_KEY_MOVE_INDEX);
+        parcelableArray = saveInstanceState.getParcelableArray(BUNDLE_KEY_MOVE_RECORD);
+        moveRecord = new MoveRecord[parcelableArray.length];
+        for(int i = 0; i < moveRecord.length; i++) {
+            moveRecord[i] = (MoveRecord)parcelableArray[i];
+        }
     }
 
     public interface BoardListener {
